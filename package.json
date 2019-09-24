@@ -1,0 +1,23 @@
+{
+    "name": "mockdown-client",
+    "version": "1.0.0",
+    "description": "Client and utility code for interfacing a JS app with Mockdown.",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "repository": "github.com/MangoTeam/mockdown-client",
+    "author": "Dylan A. Lukes <dlukes@eng.ucsd.edu>",
+    "license": "MIT",
+    "private": true,
+    "devDependencies": {
+        "rimraf": "^3.0.0",
+        "typescript": "^3.6.3"
+    },
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc -w",
+        "clean": "rimraf lib"
+    },
+    "dependencies": {
+        "kiwi.js": "^1.1.2"
+    }
+}
