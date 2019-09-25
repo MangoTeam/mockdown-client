@@ -10,15 +10,15 @@ as well as Cassowary (`kiwi.js`).
 
 First, compile it:
 
-> npm run build
+> yarn build // or npm run build
 
 Then link it:
 
-> yarn link
+> yarn link // or npm link
 
 And finally, in any project you want to use your copy of this package:
 
-> yarn link mockdown-client
+> yarn link mockdown-client // or npm link mockdown-client
 
 (Instructions are more or less the same if you use `npm link`.)
 
