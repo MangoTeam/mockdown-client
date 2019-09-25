@@ -7,5 +7,6 @@ import 'isomorphic-fetch';
 
 export * from './api';
 export * from './types';
-export * from './viewbox';
+export * from './ConstraintParser';
+export * from './ViewBox';
 export * from './cassowary';
