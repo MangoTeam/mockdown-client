@@ -10,20 +10,3 @@ export enum Attribute {
 }
 
 export type VariableMap = { [key: string]: kiwi.Variable };
-
-export interface IViewBoxJSON {
-    name: string;
-    rect: [number, number, number, number];
-    children: Array<IViewBoxJSON>;
-}
-
-export interface IViewBox extends IViewBoxJSON {
-    children: Array<IViewBox>;
-
-    left: number;
-    top: number;
-    right: number;
-    bottom: number;
-    readonly width: number;
-    readonly height: number;
-}

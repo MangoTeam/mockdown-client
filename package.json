@@ -4,18 +4,25 @@
     "description": "Client and utility code for interfacing a JS app with Mockdown.",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
+    "test": "jest",
     "repository": "github.com/MangoTeam/mockdown-client",
     "author": "Dylan A. Lukes <dlukes@eng.ucsd.edu>",
     "license": "MIT",
     "private": true,
     "devDependencies": {
         "rimraf": "^3.0.0",
-        "typescript": "^3.6.3"
+        "typescript": "^3.6.3",
+        "@types/jest": "^24.0.18",
+        "jest": "^24.9.0",
+        "ts-jest": "^24.1.0"
     },
     "scripts": {
         "build": "tsc",
         "watch": "tsc -w",
-        "clean": "rimraf lib"
+        "clean": "rimraf lib",
+        "test": "jest",
+        "test:watch": "jest -w",
+        "test:cover": "jest -w --collect-coverage"
     },
     "dependencies": {
         "@types/isomorphic-fetch": "^0.0.35",

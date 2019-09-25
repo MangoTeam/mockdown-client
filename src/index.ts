@@ -8,5 +8,6 @@ import 'isomorphic-fetch';
 export * from './api';
 export * from './types';
 export * from './ConstraintParser';
-export * from './ViewBox';
+export * from './LayoutSolver';
+export * from './LayoutView';
 export * from './cassowary';

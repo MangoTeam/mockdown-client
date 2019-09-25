@@ -1,10 +1,11 @@
 import kiwi from 'kiwi.js';
-import {Attribute, VariableMap, IViewBox, IViewBoxJSON} from './types';
+import { Attribute, VariableMap } from './types';
+import { ILayoutView } from './LayoutView';
 
-function createSolverVariableMap(boxes: Array<IViewBox>) {
-    const attrs =  Object.values(Attribute);
+function createSolverVariableMap(views: Array<ILayoutView>) {
+    const attrs = Object.values(Attribute);
 
-    const variables = boxes.flatMap((b) => {
+    const variables = views.flatMap((b) => {
         return attrs.map((a) => new kiwi.Variable(`${b.name}.${a}`));
     });
 
@@ -16,36 +17,36 @@ function createSolverVariableMap(boxes: Array<IViewBox>) {
     return variableMap;
 }
 
-function createSolver(boxes: Array<IViewBox>, variableMap: VariableMap) {
+function createSolver(views: Array<ILayoutView>, variableMap: VariableMap) {
     // Create a solver
     let solver = new kiwi.Solver();
     Object.values(variableMap).forEach(variable => {
         solver.addEditVariable(variable, kiwi.Strength.strong);
     });
 
-    // maps `${boxName}.${attr}` to numbers
-    const boxesDictionary = boxes.reduce((acc: {[key: string]: number}, box: IViewBox) => {
-        const attrs: Attribute[]  = Object.values(Attribute);
-        attrs.forEach(a => acc[`${box.name}.${a}`] = box[a]);
+    // maps `${viewName}.${attr}` to numbers
+    const viewsDictionary = views.reduce((acc: { [key: string]: number }, view: ILayoutView) => {
+        const attrs: Attribute[] = Object.values(Attribute);
+        attrs.forEach(a => acc[`${view.name}.${a}`] = view[a]);
         return acc;
     }, {});
 
-    const varsWithValues = Object.values(variableMap).filter(kiwiVar => boxesDictionary[kiwiVar.name()]);
+    const varsWithValues = Object.values(variableMap).filter(kiwiVar => viewsDictionary[kiwiVar.name()]);
     varsWithValues.forEach(v => {
-        solver.suggestValue(v, boxesDictionary[v.name()]);
+        solver.suggestValue(v, viewsDictionary[v.name()]);
     });
 
     return solver;
 }
 
-function createAxiomaticConstraints(boxes: Array<IViewBox>, variables: VariableMap) {
+function createAxiomaticConstraints(views: Array<ILayoutView>, variables: VariableMap) {
     const operator = kiwi.Operator.Eq;
     const strength = kiwi.Strength.required;
 
-    const axioms = boxes.reduce((acc: Array<kiwi.Constraint>, box) => {
+    const axioms = views.reduce((acc: Array<kiwi.Constraint>, view) => {
         let [left, top, right, bottom, width, height] = [
             "left", "top", "right", "bottom", "width", "height"
-        ].map((attr) => variables[`${box.name}.${attr}`]);
+        ].map((attr) => variables[`${view.name}.${attr}`]);
 
         let widthAxiomRHS = new kiwi.Expression(right.minus(left));
         let widthAxiom = new kiwi.Constraint(width, operator, widthAxiomRHS, strength);
