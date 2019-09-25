@@ -6,3 +6,6 @@ polyfill();
 import 'isomorphic-fetch';
 
 export * from './api';
+export * from './types';
+export * from './viewbox';
+export * from './cassowary';
