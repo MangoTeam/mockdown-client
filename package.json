@@ -18,6 +18,9 @@
         "clean": "rimraf lib"
     },
     "dependencies": {
+        "@types/isomorphic-fetch": "^0.0.35",
+        "es6-promise": "^4.2.8",
+        "isomorphic-fetch": "^2.2.1",
         "kiwi.js": "^1.1.2"
     }
 }
