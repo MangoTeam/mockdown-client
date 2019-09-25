@@ -1,15 +1,15 @@
 import fetch from 'isomorphic-fetch';
 
-async function fetchConstraints(
+export async function fetchConstraints(
     examples: any,
-    endpoint: string = 'localhost:8000',
+    endpoint: string = 'localhost',
     port: string = '8000'
 ): Promise<any> {
     const body = JSON.stringify({
         'examples': examples
     });
 
-    const response = await fetch(`${endpoint}:${port}/api/synthesize`, {
+    const response = await fetch(`http://${endpoint}:${port}/api/synthesize`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -21,6 +21,3 @@ async function fetchConstraints(
     return response.json();
 }
 
-export default {
-    fetchConstraints: fetchConstraints
-}
