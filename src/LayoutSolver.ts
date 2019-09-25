@@ -10,7 +10,12 @@ import {
 import { Attribute } from './types';
 import { ILayoutView } from './LayoutView';
 
-export class LayoutSolver extends Solver {
+export interface ILayoutSolver {
+    getVariable(name: string): Variable | undefined;
+    getView(name: string): ILayoutView | undefined;
+}
+
+export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
     private _root: ILayoutView;
 
@@ -19,6 +24,18 @@ export class LayoutSolver extends Solver {
 
     /// Index for all views by name (e.g. 'foo').
     private _viewMap: Map<string, ILayoutView>;
+
+    public getVariable(name: string): Variable | undefined {
+        return this._variableMap.get(name);
+    }
+
+    public getVariables(...names: Array<string>): Array<Variable | undefined> {
+        return names.map((name) => this.getVariable(name));
+    }
+
+    public getView(name: string): ILayoutView | undefined {
+        return this._viewMap.get(name);
+    }
 
     constructor(root: ILayoutView) {
         super();
@@ -42,15 +59,6 @@ export class LayoutSolver extends Solver {
                 })
             })
         );
-
-        // Add all of the variables to our solver, and suggest
-        // their initial values.
-        for (let variable of variableMap.values()) {
-            const value = variable.value();
-
-            this.addEditVariable(variable, Strength.strong);
-            this.suggestValue(variable, value);
-        }
 
         // Add the axiomatic constraints, e.g. width = right - left.
         for (let view of viewMap.values()) {

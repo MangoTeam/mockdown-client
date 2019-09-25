@@ -10,4 +10,3 @@ export * from './types';
 export * from './ConstraintParser';
 export * from './LayoutSolver';
 export * from './LayoutView';
-export * from './cassowary';
