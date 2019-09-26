@@ -9,4 +9,4 @@ export enum Attribute {
     Height = "height"
 }
 
-export type VariableMap = { [key: string]: kiwi.Variable };
+export type VariableMap = Map<string, kiwi.Variable>;

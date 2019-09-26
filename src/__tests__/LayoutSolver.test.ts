@@ -37,7 +37,7 @@ describe(LayoutSolver, () => {
     test(`solves for width when left and right are suggested (width axiom).`, () => {
         const view = new LayoutView({
             name: 'root',
-            rect: [0, 0, 100, 100] // note: this doesn't matter.
+            rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
         
         const solver = new LayoutSolver(view);
@@ -61,7 +61,7 @@ describe(LayoutSolver, () => {
     test(`solves for height when top and bottom are suggested (height axiom).`, () => {
         const view = new LayoutView({
             name: 'root',
-            rect: [0, 0, 100, 100] // note: this doesn't matter.
+            rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
         
         const solver = new LayoutSolver(view);
