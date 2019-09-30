@@ -13,8 +13,9 @@ import { ILayoutView } from '../views';
 export interface ILayoutSolver {
     readonly variableMap: Map<string, Variable>;
 
-    findVariable(name: string): Variable | undefined;
-    findView(name: string): ILayoutView | undefined;
+    getVariable(name: string): Variable | undefined;
+    getVariables(...names: Array<string>): Array<Variable | undefined>;
+    getView(name: string): ILayoutView | undefined;
 }
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
@@ -31,15 +32,15 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         return this._variableMap;
     }
 
-    public findVariable(name: string): Variable | undefined {
+    public getVariable(name: string): Variable | undefined {
         return this._variableMap.get(name);
     }
 
     public getVariables(...names: Array<string>): Array<Variable | undefined> {
-        return names.map((name) => this.findVariable(name));
+        return names.map((name) => this.getVariable(name));
     }
 
-    public findView(name: string): ILayoutView | undefined {
+    public getView(name: string): ILayoutView | undefined {
         return this._viewMap.get(name);
     }
 
