@@ -2,6 +2,7 @@ import {Variable} from "kiwi.js";
 import {ILayoutView} from "../views";
 
 export interface ILayoutSolver {
+    readonly root: ILayoutView;
     readonly variableMap: ILayoutSolver.VariableMap;
 
     getVariable(name: string): Variable | undefined;

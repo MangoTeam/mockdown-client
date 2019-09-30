@@ -6,20 +6,16 @@ import {ILayoutSolver} from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
-    private _root: ILayoutView;
+    readonly root: ILayoutView;
 
     /// Index for all variables by name (e.g. 'foo.left').
-    private _variableMap: Map<string, Variable>;
+    readonly variableMap: Map<string, Variable>;
 
     /// Index for all views by name (e.g. 'foo').
     private _viewMap: Map<string, ILayoutView>;
 
-    get variableMap(): Map<string, Variable> {
-        return this._variableMap;
-    }
-
     public getVariable(name: string): Variable | undefined {
-        return this._variableMap.get(name);
+        return this.variableMap.get(name);
     }
 
     public getVariables(...names: Array<string>): Array<Variable | undefined> {
@@ -36,7 +32,7 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         const views = Array.from(root);
         const attrs = Object.values(Attribute);
 
-        this._root = root;
+        this.root = root;
         const viewMap = this._viewMap = new Map(
             views.map((view: ILayoutView) => {
                 return [view.name, view];
@@ -44,7 +40,7 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         );
 
         // Create all of the necessary variables.
-        const variableMap = this._variableMap = new Map(
+        const variableMap = this.variableMap = new Map(
             views.flatMap((view: ILayoutView) => {
                 return attrs.map((attr) => {
                     const name = `${view.name}.${attr}`;
