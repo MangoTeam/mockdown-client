@@ -1,4 +1,4 @@
-import { ILayoutView, LayoutView } from '../views/LayoutView';
+import { ILayoutView, LayoutView } from '../..';
 
 describe(LayoutView, () => {
     test(`can be constructed from JSON.`, () => {

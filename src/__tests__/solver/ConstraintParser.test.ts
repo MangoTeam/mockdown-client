@@ -1,14 +1,15 @@
-import { 
-    ConstraintParser,
-    VariableMap
-} from '..';
+import {
+    ConstraintParser, ILayoutSolver
+} from '../..';
+import VariableMap = ILayoutSolver.VariableMap;
+
 import { Variable, Strength } from 'kiwi.js';
 
 // Note: none of these tests really check that constraints are parsed
 // *correctly* because kiwi's Constraint type is really janky to work with.
 
 describe(ConstraintParser, () => {
-    
+
     test(`does not crash parsing simple constraints.`, () => {
         const variableMap: VariableMap = new Map([
             ["foo.right", new Variable("foo.right")],

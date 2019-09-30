@@ -2,24 +2,28 @@ import { ILayoutView } from "./ILayoutView";
 
 export class LayoutViewCursor implements ILayoutView {
     private _root: ILayoutView;
-    private _cursor: ILayoutView;
+    private _current: ILayoutView;
 
     constructor(root: ILayoutView) {
         this._root = root;
-        this._cursor = root;
+        this._current = root;
     }
 
     /// Additions provided by LayoutViewCursor.
 
+    get current(): ILayoutView {
+        return this._current;
+    }
+
     goUp() {
         if (!this.parent) return;
-        this._cursor = this.parent;
+        this._current = this.parent;
     }
 
     goDown(name: string): boolean {
         const child = this.findChild(name);
         if (child) {
-            this._cursor = child;
+            this._current = child;
             return true;
         } else {
             return false;
@@ -29,7 +33,7 @@ export class LayoutViewCursor implements ILayoutView {
     /// Implementation of ILayoutView by delegation follows.
 
     get name(): string {
-        return this._cursor.name;
+        return this._current.name;
     }
 
     set name(newName: string) {
@@ -37,71 +41,71 @@ export class LayoutViewCursor implements ILayoutView {
     }
 
     get rect(): [number, number, number, number] {
-        return this._cursor.rect;
+        return this._current.rect;
     }
 
     set rect(newRect: [number, number, number, number]) {
-        this._cursor.rect = newRect;
+        this._current.rect = newRect;
     }
 
     get children(): Iterable<ILayoutView> {
-        return this._cursor.children;
+        return this._current.children;
     }
 
     findChild(name: string, recursive?: boolean): ILayoutView | undefined {
-        return this._cursor.findChild(name, recursive);
+        return this._current.findChild(name, recursive);
     }
 
     get parent(): ILayoutView | undefined {
-        return this._cursor.parent;
+        return this._current.parent;
     }
 
     get left(): number {
-        return this._cursor.left;
+        return this._current.left;
     }
 
     set left(newLeft) {
-        this._cursor.left = newLeft;
+        this._current.left = newLeft;
     }
 
     get top(): number {
-        return this._cursor.top;
+        return this._current.top;
     }
 
     set top(newTop) {
-        this._cursor.top = newTop;
+        this._current.top = newTop;
     }
 
     get right(): number {
-        return this._cursor.right;
+        return this._current.right;
     }
 
     set right(newRight) {
-        this._cursor.right = newRight;
+        this._current.right = newRight;
     }
 
     get bottom(): number {
-        return this._cursor.bottom;
+        return this._current.bottom;
     }
 
     set bottom(newBottom) {
-        this._cursor.bottom = newBottom;
+        this._current.bottom = newBottom;
     }
 
     get width() {
-        return this._cursor.width;
+        return this._current.width;
     }
 
     get height() {
-        return this._cursor.height;
+        return this._current.height;
     }
 
     get json() {
-        return this._cursor.json;
+        return this._current.json;
     }
 
     [Symbol.iterator](): Iterator<ILayoutView> {
-        return this._cursor[Symbol.iterator]();
+        return this._current[Symbol.iterator]();
     }
 
 }

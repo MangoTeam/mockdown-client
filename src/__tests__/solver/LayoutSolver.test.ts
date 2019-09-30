@@ -1,4 +1,4 @@
-import { ILayoutView, LayoutView, LayoutSolver } from '..';
+import { ILayoutView, LayoutView, LayoutSolver } from '../../index';
 import { Strength, Variable } from 'kiwi.js';
 
 describe(LayoutSolver, () => {

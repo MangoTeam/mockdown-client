@@ -21,8 +21,8 @@
         "watch": "tsc -w",
         "clean": "rimraf lib",
         "test": "jest",
-        "test:watch": "jest -w",
-        "test:cover": "jest -w --collect-coverage"
+        "test:watch": "jest --watch",
+        "test:cover": "jest --collect-coverage"
     },
     "dependencies": {
         "@types/isomorphic-fetch": "^0.0.35",
