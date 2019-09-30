@@ -1,5 +1,5 @@
 import * as kiwi from 'kiwi.js';
-import { VariableMap } from './types';
+import { VariableMap } from '../types';
 
 // Currently unused.
 const constraintRegex = 

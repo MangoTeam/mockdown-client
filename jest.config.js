@@ -1,6 +1,10 @@
 module.exports = {
     preset: 'ts-jest',
-    rootDir: 'src',
     testEnvironment: 'node',
-    collectCoverage: true
+    collectCoverage: true,
+    globals: {
+        'ts-jest': {
+            tsConfig: 'tsconfig.test.json'
+        }
+    }
 };

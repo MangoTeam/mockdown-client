@@ -1,6 +1,8 @@
-import { ConstraintParser } from '../ConstraintParser';
+import { 
+    ConstraintParser,
+    VariableMap
+} from '..';
 import { Variable, Strength } from 'kiwi.js';
-import { VariableMap } from '../types';
 
 // Note: none of these tests really check that constraints are parsed
 // *correctly* because kiwi's Constraint type is really janky to work with.

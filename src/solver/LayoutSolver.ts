@@ -7,12 +7,14 @@ import {
     Variable 
 } from 'kiwi.js';
 
-import { Attribute } from './types';
-import { ILayoutView } from './LayoutView';
+import { Attribute } from '../types';
+import { ILayoutView } from '../views';
 
 export interface ILayoutSolver {
-    getVariable(name: string): Variable | undefined;
-    getView(name: string): ILayoutView | undefined;
+    readonly variableMap: Map<string, Variable>;
+
+    findVariable(name: string): Variable | undefined;
+    findView(name: string): ILayoutView | undefined;
 }
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
@@ -25,15 +27,19 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
     /// Index for all views by name (e.g. 'foo').
     private _viewMap: Map<string, ILayoutView>;
 
-    public getVariable(name: string): Variable | undefined {
+    get variableMap(): Map<string, Variable> {
+        return this._variableMap;
+    }
+
+    public findVariable(name: string): Variable | undefined {
         return this._variableMap.get(name);
     }
 
     public getVariables(...names: Array<string>): Array<Variable | undefined> {
-        return names.map((name) => this.getVariable(name));
+        return names.map((name) => this.findVariable(name));
     }
 
-    public getView(name: string): ILayoutView | undefined {
+    public findView(name: string): ILayoutView | undefined {
         return this._viewMap.get(name);
     }
 

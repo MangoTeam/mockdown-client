@@ -1,4 +1,4 @@
-import { ILayoutView, LayoutView } from '../LayoutView';
+import { ILayoutView, LayoutView } from '../views/LayoutView';
 
 describe(LayoutView, () => {
     test(`can be constructed from JSON.`, () => {
@@ -66,6 +66,19 @@ describe(LayoutView, () => {
         expect(view.height).toBe(80);
     });
 
+    test(`allows lookup of children by name.`, () => {
+        const view = new LayoutView({
+            name: "root",
+            rect: [0, 0, 100, 100],
+            children: [
+                {name: "a", rect: [0, 0, 50, 50], children: []}
+            ]
+        });
+
+        const child = view.findChild("a");
+        expect(child).toBe(Array.from(view.children)[0]);
+    });
+
     test(`implements Iterable.`, () => {
         const view = new LayoutView({
             name: "root",
@@ -81,4 +94,4 @@ describe(LayoutView, () => {
         expect(views).toContain("a");
         expect(views).toContain("b");
     });
-})
+});
