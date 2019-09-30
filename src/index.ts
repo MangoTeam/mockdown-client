@@ -6,6 +6,6 @@ polyfill();
 import 'isomorphic-fetch';
 
 export * from './api';
-export * from './types';
 export * from './solver';
 export * from './views';
+export {Attribute} from "./views/Attribute";

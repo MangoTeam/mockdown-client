@@ -1,5 +1,7 @@
 import * as kiwi from 'kiwi.js';
-import { VariableMap } from '../types';
+
+import {ILayoutSolver} from "./ILayoutSolver";
+import VariableMap = ILayoutSolver.VariableMap;
 
 // Currently unused.
 const constraintRegex = 
@@ -7,6 +9,7 @@ const constraintRegex =
 
 export class ConstraintParser {
     private _variableMap: VariableMap;
+
     constructor(variableMap: VariableMap) {
         this._variableMap = variableMap;
     }

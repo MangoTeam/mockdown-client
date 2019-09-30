@@ -1,22 +1,8 @@
-import { 
-    Constraint, 
-    Expression, 
-    Operator,
-    Solver, 
-    Strength, 
-    Variable 
-} from 'kiwi.js';
+import {Constraint, Expression, Operator, Solver, Strength, Variable} from 'kiwi.js';
 
-import { Attribute } from '../types';
-import { ILayoutView } from '../views';
-
-export interface ILayoutSolver {
-    readonly variableMap: Map<string, Variable>;
-
-    getVariable(name: string): Variable | undefined;
-    getVariables(...names: Array<string>): Array<Variable | undefined>;
-    getView(name: string): ILayoutView | undefined;
-}
+import {ILayoutView} from '../views';
+import {Attribute} from "../views/Attribute";
+import {ILayoutSolver} from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
