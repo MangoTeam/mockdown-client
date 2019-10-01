@@ -1,8 +1,8 @@
-import {Constraint, Expression, Operator, Solver, Strength, Variable} from 'kiwi.js';
+import { Constraint, Expression, Operator, Solver, Strength, Variable } from 'kiwi.js';
 
-import {ILayoutView} from '../views';
-import {Attribute} from "../views/Attribute";
-import {ILayoutSolver} from "./ILayoutSolver";
+import { ILayoutView } from '../views';
+import { Attribute } from "../views/Attribute";
+import { ILayoutSolver } from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
@@ -68,6 +68,18 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
                 Strength.required
             );
             this.addConstraint(heightAxiom);
+        }
+    }
+
+    updateView(): void {
+        for (const view of this.root) {
+            for (const attr of Attribute.writables) {
+                const variable = this.variableMap.get(`${view.name}.${attr}`);
+                if (variable === undefined) {
+                    throw new Error(`unknown variable ${view.name}.${attr}`);
+                }
+                view[attr] = variable.value();
+            }
         }
     }
 }

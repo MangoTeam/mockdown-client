@@ -10,6 +10,8 @@ export interface ILayoutSolver {
     getVariables(...names: Array<string>): Array<Variable | undefined>;
 
     getView(name: string): ILayoutView | undefined;
+
+    updateView(): void;
 }
 
 export namespace ILayoutSolver {
