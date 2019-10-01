@@ -40,11 +40,11 @@ export class LayoutViewCursor implements ILayoutView {
         return
     }
 
-    get rect(): [number, number, number, number] {
+    get rect(): ILayoutView.Rect {
         return this._current.rect;
     }
 
-    set rect(newRect: [number, number, number, number]) {
+    set rect(newRect: ILayoutView.Rect) {
         this._current.rect = newRect;
     }
 

@@ -2,13 +2,13 @@ import {ILayoutView} from './ILayoutView';
 
 export class LayoutView implements ILayoutView, Iterable<ILayoutView> {
     public name: string;
-    public rect: [number, number, number, number];
+    public rect: ILayoutView.Rect;
     private _childMap: Map<string, ILayoutView>;
     private _parent?: ILayoutView;
 
     public constructor(json: ILayoutView.JSON, parent?: ILayoutView) {
         this.name = json.name;
-        this.rect = [json.rect[0], json.rect[1], json.rect[2], json.rect[3]]; // arrays are reference types!
+        this.rect = [...json.rect] as ILayoutView.Rect; // arrays are reference types!
         this._childMap = new Map(
             (json.children || []).map((json) => {
                 return [json.name, new LayoutView(json, this)];
@@ -57,7 +57,7 @@ export class LayoutView implements ILayoutView, Iterable<ILayoutView> {
     public get json(): ILayoutView.JSON {
         return {
             name: this.name,
-            rect: this.rect,
+            rect: [...this.rect] as ILayoutView.Rect,
             children: Array.from(this.children, (child) => child.json)
         }
     }
