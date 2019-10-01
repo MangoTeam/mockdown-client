@@ -8,7 +8,7 @@ export class LayoutView implements ILayoutView, Iterable<ILayoutView> {
 
     public constructor(json: ILayoutView.JSON, parent?: ILayoutView) {
         this.name = json.name;
-        this.rect = json.rect;
+        this.rect = [json.rect[0], json.rect[1], json.rect[2], json.rect[3]]; // arrays are reference types!
         this._childMap = new Map(
             (json.children || []).map((json) => {
                 return [json.name, new LayoutView(json, this)];
