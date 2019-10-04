@@ -1,7 +1,6 @@
 import { Constraint, Expression, Operator, Solver, Strength, Variable } from 'kiwi.js';
 
-import { ILayoutView } from '../views';
-import { Attribute } from "../views/Attribute";
+import { Attribute, ILayoutView } from '../views';
 import { ILayoutSolver } from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
@@ -49,7 +48,7 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             })
         );
 
-        // Add the axiomatic constraints, e.g. width = right - left.
+        // Add the axiomatic constraints, e.g. width = right - left, width >= 0.
         for (let view of viewMap.values()) {
             let [left, top, right, bottom, width, height] = attrs.map((attr) => {
                 return variableMap.get(`${view.name}.${attr}`)!;
@@ -57,16 +56,23 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
             let widthAxiomRHS = new Expression(right.minus(left));
             let widthAxiom = new Constraint(
-                width, Operator.Eq, widthAxiomRHS, 
+                width, Operator.Eq, widthAxiomRHS,
                 Strength.required
             );
-            this.addConstraint(widthAxiom);
+
+            let positiveWidthAxiom = new Constraint(width, Operator.Ge, new Expression(0))
 
             let heightAxiomRHS = new Expression(bottom.minus(top));
             let heightAxiom = new Constraint(
                 height, Operator.Eq, heightAxiomRHS, 
                 Strength.required
             );
+
+            let positiveHeightAxiom = new Constraint(height, Operator.Ge, new Expression(0))
+
+            this.addConstraint(positiveWidthAxiom);
+            this.addConstraint(widthAxiom);
+            this.addConstraint(positiveHeightAxiom);
             this.addConstraint(heightAxiom);
         }
     }

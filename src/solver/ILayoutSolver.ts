@@ -1,7 +1,7 @@
-import {Variable} from "kiwi.js";
-import {ILayoutView} from "../views";
+import { Solver, Variable } from "kiwi.js";
+import { ILayoutView } from "../views";
 
-export interface ILayoutSolver {
+export interface ILayoutSolver extends Solver {
     readonly root: ILayoutView;
     readonly variableMap: ILayoutSolver.VariableMap;
 
