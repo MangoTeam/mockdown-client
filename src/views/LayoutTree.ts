@@ -1,27 +1,27 @@
-import {ILayoutView} from './ILayoutView';
+import {ILayoutTree} from './ILayoutTree';
 
-export class LayoutView implements ILayoutView, Iterable<ILayoutView> {
+export class LayoutTree implements ILayoutTree, Iterable<ILayoutTree> {
     public name: string;
-    public rect: ILayoutView.Rect;
-    private _childMap: Map<string, ILayoutView>;
-    private _parent?: ILayoutView;
+    public rect: ILayoutTree.Rect;
+    private _childMap: Map<string, ILayoutTree>;
+    private _parent?: ILayoutTree;
 
-    public constructor(json: ILayoutView.JSON, parent?: ILayoutView) {
+    public constructor(json: ILayoutTree.JSON, parent?: ILayoutTree) {
         this.name = json.name;
-        this.rect = [...json.rect] as ILayoutView.Rect; // arrays are reference types!
+        this.rect = [...json.rect] as ILayoutTree.Rect; // arrays are reference types!
         this._childMap = new Map(
             (json.children || []).map((json) => {
-                return [json.name, new LayoutView(json, this)];
+                return [json.name, new LayoutTree(json, this)];
             })
         );
 
         this._parent = parent;
     }
 
-    public get children(): Iterable<ILayoutView> { return this._childMap.values(); }
-    public get parent(): ILayoutView | undefined { return this._parent;}
+    public get children(): Iterable<ILayoutTree> { return this._childMap.values(); }
+    public get parent(): ILayoutTree | undefined { return this._parent;}
 
-    findChild(name: string, recursive?: boolean): ILayoutView | undefined {
+    findChild(name: string, recursive?: boolean): ILayoutTree | undefined {
         let needle = this._childMap.get(name);
 
         if (!needle && recursive) {
@@ -54,19 +54,19 @@ export class LayoutView implements ILayoutView, Iterable<ILayoutView> {
     /// Get the canonical JSON representation, which does not
     /// contain convenience accessors for left, right,
     /// top, bottom, width, height, center_x, center_y, etc.
-    public get json(): ILayoutView.JSON {
+    public get json(): ILayoutTree.JSON {
         return {
             name: this.name,
-            rect: [...this.rect] as ILayoutView.Rect,
+            rect: [...this.rect] as ILayoutTree.Rect,
             children: Array.from(this.children, (child) => child.json)
         }
     }
 
     /// Iterate over all views in this view hierarchy (including `this`!).
-    [Symbol.iterator](): Iterator<ILayoutView> {
+    [Symbol.iterator](): Iterator<ILayoutTree> {
         const root = this;
 
-        function* iterator(): Iterator<ILayoutView> {
+        function* iterator(): Iterator<ILayoutTree> {
             yield root;
             for (let child of root.children) {
                 yield* child;

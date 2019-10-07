@@ -1,8 +1,8 @@
-import { ILayoutView, LayoutView } from '../..';
+import { ILayoutTree, LayoutTree } from '../..';
 
-describe(LayoutView, () => {
+describe(LayoutTree, () => {
     test(`can be constructed from JSON.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -10,14 +10,14 @@ describe(LayoutView, () => {
     });
 
     test(`can be constructed from JSON without 'children'.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [0, 0, 100, 100]
         });
     });
 
     test(`can be converted into JSON (and back)`, () => {
-        const json: ILayoutView.JSON = {
+        const json: ILayoutTree.JSON = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -26,13 +26,13 @@ describe(LayoutView, () => {
             ]
         };
 
-        const view = new LayoutView(json);
+        const view = new LayoutTree(json);
 
         expect(view.json).toEqual(json);
     });
 
     test(`implements attribute getters.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [10, 10, 100, 100],
             children: []
@@ -47,7 +47,7 @@ describe(LayoutView, () => {
     });
 
     test(`implements attribute setters.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -67,7 +67,7 @@ describe(LayoutView, () => {
     });
 
     test(`allows lookup of children by name.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -80,7 +80,7 @@ describe(LayoutView, () => {
     });
 
     test(`implements Iterable.`, () => {
-        const view = new LayoutView({
+        const view = new LayoutTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [

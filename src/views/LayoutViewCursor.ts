@@ -1,17 +1,17 @@
-import { ILayoutView } from "./ILayoutView";
+import { ILayoutTree } from "./ILayoutTree";
 
-export class LayoutViewCursor implements ILayoutView {
-    private _root: ILayoutView;
-    private _current: ILayoutView;
+export class LayoutViewCursor implements ILayoutTree {
+    private _root: ILayoutTree;
+    private _current: ILayoutTree;
 
-    constructor(root: ILayoutView) {
+    constructor(root: ILayoutTree) {
         this._root = root;
         this._current = root;
     }
 
     /// Additions provided by LayoutViewCursor.
 
-    get current(): ILayoutView {
+    get current(): ILayoutTree {
         return this._current;
     }
 
@@ -30,7 +30,7 @@ export class LayoutViewCursor implements ILayoutView {
         }
     }
 
-    /// Implementation of ILayoutView by delegation follows.
+    /// Implementation of ILayoutTree by delegation follows.
 
     get name(): string {
         return this._current.name;
@@ -40,23 +40,23 @@ export class LayoutViewCursor implements ILayoutView {
         return
     }
 
-    get rect(): ILayoutView.Rect {
+    get rect(): ILayoutTree.Rect {
         return this._current.rect;
     }
 
-    set rect(newRect: ILayoutView.Rect) {
+    set rect(newRect: ILayoutTree.Rect) {
         this._current.rect = newRect;
     }
 
-    get children(): Iterable<ILayoutView> {
+    get children(): Iterable<ILayoutTree> {
         return this._current.children;
     }
 
-    findChild(name: string, recursive?: boolean): ILayoutView | undefined {
+    findChild(name: string, recursive?: boolean): ILayoutTree | undefined {
         return this._current.findChild(name, recursive);
     }
 
-    get parent(): ILayoutView | undefined {
+    get parent(): ILayoutTree | undefined {
         return this._current.parent;
     }
 
@@ -104,7 +104,7 @@ export class LayoutViewCursor implements ILayoutView {
         return this._current.json;
     }
 
-    [Symbol.iterator](): Iterator<ILayoutView> {
+    [Symbol.iterator](): Iterator<ILayoutTree> {
         return this._current[Symbol.iterator]();
     }
 

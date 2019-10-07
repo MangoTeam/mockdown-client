@@ -1,15 +1,15 @@
 import { Solver, Variable } from "kiwi.js";
-import { ILayoutView } from "../views";
+import { ILayoutTree } from "../views";
 
 export interface ILayoutSolver extends Solver {
-    readonly root: ILayoutView;
+    readonly root: ILayoutTree;
     readonly variableMap: ILayoutSolver.VariableMap;
 
     getVariable(name: string): Variable | undefined;
 
     getVariables(...names: Array<string>): Array<Variable | undefined>;
 
-    getView(name: string): ILayoutView | undefined;
+    getView(name: string): ILayoutTree | undefined;
 
     updateView(): void;
 }

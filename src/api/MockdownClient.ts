@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch';
-import { ILayoutView } from '../views';
+import { ILayoutTree } from '../views';
 
 export class MockdownClient {
     private _host: string;
@@ -14,7 +14,7 @@ export class MockdownClient {
         this._synthesizeEndpoint = `http://${host}:${port}/api/synthesize`;
     }
 
-    async fetch(examples: Array<ILayoutView.JSON>) {
+    async fetch(examples: Array<ILayoutTree.JSON>) {
         const body = JSON.stringify({ 'examples': examples });
 
         const response = await fetch(this._synthesizeEndpoint, {

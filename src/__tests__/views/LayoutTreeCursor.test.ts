@@ -1,12 +1,12 @@
 import {
-    ILayoutView,
-    LayoutView,
+    ILayoutTree,
+    LayoutTree,
     LayoutViewCursor
 } from '../..';
 
 describe(LayoutViewCursor, () => {
     test(`can go up and down.`, () => {
-        const json: ILayoutView.JSON = {
+        const json: ILayoutTree.JSON = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -14,7 +14,7 @@ describe(LayoutViewCursor, () => {
             ]
         };
 
-        const root = new LayoutView(json);
+        const root = new LayoutTree(json);
         const cursor = new LayoutViewCursor(root);
 
         cursor.goDown("a");

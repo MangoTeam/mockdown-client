@@ -1,17 +1,17 @@
 import { Constraint, Expression, Operator, Solver, Strength, Variable } from 'kiwi.js';
 
-import { Attribute, ILayoutView } from '../views';
+import { Attribute, ILayoutTree } from '../views';
 import { ILayoutSolver } from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
-    readonly root: ILayoutView;
+    readonly root: ILayoutTree;
 
     /// Index for all variables by name (e.g. 'foo.left').
     readonly variableMap: Map<string, Variable>;
 
     /// Index for all views by name (e.g. 'foo').
-    private _viewMap: Map<string, ILayoutView>;
+    private _viewMap: Map<string, ILayoutTree>;
 
     public getVariable(name: string): Variable | undefined {
         return this.variableMap.get(name);
@@ -21,11 +21,11 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         return names.map((name) => this.getVariable(name));
     }
 
-    public getView(name: string): ILayoutView | undefined {
+    public getView(name: string): ILayoutTree | undefined {
         return this._viewMap.get(name);
     }
 
-    constructor(root: ILayoutView) {
+    constructor(root: ILayoutTree) {
         super();
 
         const views = Array.from(root);
@@ -33,14 +33,14 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
         this.root = root;
         const viewMap = this._viewMap = new Map(
-            views.map((view: ILayoutView) => {
+            views.map((view: ILayoutTree) => {
                 return [view.name, view];
             })
         );
 
         // Create all of the necessary variables.
         const variableMap = this.variableMap = new Map(
-            views.flatMap((view: ILayoutView) => {
+            views.flatMap((view: ILayoutTree) => {
                 return attrs.map((attr) => {
                     const name = `${view.name}.${attr}`;
                     return [name, new Variable(name)];
@@ -64,7 +64,7 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
             let heightAxiomRHS = new Expression(bottom.minus(top));
             let heightAxiom = new Constraint(
-                height, Operator.Eq, heightAxiomRHS, 
+                height, Operator.Eq, heightAxiomRHS,
                 Strength.required
             );
 
