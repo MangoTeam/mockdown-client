@@ -1,4 +1,4 @@
 export * from './Attribute';
-export * from './ILayoutTree';
-export * from './LayoutTree';
-export * from './LayoutViewCursor';
+export * from './ILayoutViewTree';
+export * from './LayoutViewTree';
+export * from './LayoutViewTreeCursor';

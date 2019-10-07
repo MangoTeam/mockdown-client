@@ -1,9 +1,9 @@
-import { ILayoutTree, LayoutTree, LayoutSolver } from '../../index';
+import { ILayoutViewTree, LayoutViewTree, LayoutSolver } from '../../index';
 import { Strength, Variable } from 'kiwi.js';
 
 describe(LayoutSolver, () => {
     test(`creates edit variables for all attributes.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
@@ -25,7 +25,7 @@ describe(LayoutSolver, () => {
     });
     
     test(`allows view lookup by name.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
@@ -34,7 +34,7 @@ describe(LayoutSolver, () => {
     });
 
     test(`solves for width when left and right are suggested (width axiom).`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
@@ -58,7 +58,7 @@ describe(LayoutSolver, () => {
     });
 
     test(`solves for height when top and bottom are suggested (height axiom).`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });

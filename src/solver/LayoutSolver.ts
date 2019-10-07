@@ -1,17 +1,17 @@
 import { Constraint, Expression, Operator, Solver, Strength, Variable } from 'kiwi.js';
 
-import { Attribute, ILayoutTree } from '../views';
+import { Attribute, ILayoutViewTree } from '../views';
 import { ILayoutSolver } from "./ILayoutSolver";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
-    readonly root: ILayoutTree;
+    readonly root: ILayoutViewTree;
 
     /// Index for all variables by name (e.g. 'foo.left').
     readonly variableMap: Map<string, Variable>;
 
     /// Index for all views by name (e.g. 'foo').
-    private _viewMap: Map<string, ILayoutTree>;
+    private _viewMap: Map<string, ILayoutViewTree>;
 
     public getVariable(name: string): Variable | undefined {
         return this.variableMap.get(name);
@@ -21,11 +21,11 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         return names.map((name) => this.getVariable(name));
     }
 
-    public getView(name: string): ILayoutTree | undefined {
+    public getView(name: string): ILayoutViewTree | undefined {
         return this._viewMap.get(name);
     }
 
-    constructor(root: ILayoutTree) {
+    constructor(root: ILayoutViewTree) {
         super();
 
         const views = Array.from(root);
@@ -33,14 +33,14 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
         this.root = root;
         const viewMap = this._viewMap = new Map(
-            views.map((view: ILayoutTree) => {
+            views.map((view: ILayoutViewTree) => {
                 return [view.name, view];
             })
         );
 
         // Create all of the necessary variables.
         const variableMap = this.variableMap = new Map(
-            views.flatMap((view: ILayoutTree) => {
+            views.flatMap((view: ILayoutViewTree) => {
                 return attrs.map((attr) => {
                     const name = `${view.name}.${attr}`;
                     return [name, new Variable(name)];

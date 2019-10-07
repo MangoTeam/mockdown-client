@@ -1,12 +1,12 @@
 import {
-    ILayoutTree,
-    LayoutTree,
-    LayoutViewCursor
+    ILayoutViewTree,
+    LayoutViewTree,
+    LayoutViewTreeCursor
 } from '../..';
 
-describe(LayoutViewCursor, () => {
+describe(LayoutViewTreeCursor, () => {
     test(`can go up and down.`, () => {
-        const json: ILayoutTree.JSON = {
+        const json: ILayoutViewTree.JSON = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -14,8 +14,8 @@ describe(LayoutViewCursor, () => {
             ]
         };
 
-        const root = new LayoutTree(json);
-        const cursor = new LayoutViewCursor(root);
+        const root = new LayoutViewTree(json);
+        const cursor = new LayoutViewTreeCursor(root);
 
         cursor.goDown("a");
         expect(cursor.current).toBe(root.findChild("a")!);

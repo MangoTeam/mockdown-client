@@ -1,8 +1,8 @@
-import { ILayoutTree, LayoutTree } from '../..';
+import { ILayoutViewTree, LayoutViewTree } from '../..';
 
-describe(LayoutTree, () => {
+describe(LayoutViewTree, () => {
     test(`can be constructed from JSON.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -10,14 +10,14 @@ describe(LayoutTree, () => {
     });
 
     test(`can be constructed from JSON without 'children'.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [0, 0, 100, 100]
         });
     });
 
     test(`can be converted into JSON (and back)`, () => {
-        const json: ILayoutTree.JSON = {
+        const json: ILayoutViewTree.JSON = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -26,13 +26,13 @@ describe(LayoutTree, () => {
             ]
         };
 
-        const view = new LayoutTree(json);
+        const view = new LayoutViewTree(json);
 
         expect(view.json).toEqual(json);
     });
 
     test(`implements attribute getters.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [10, 10, 100, 100],
             children: []
@@ -47,7 +47,7 @@ describe(LayoutTree, () => {
     });
 
     test(`implements attribute setters.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -67,7 +67,7 @@ describe(LayoutTree, () => {
     });
 
     test(`allows lookup of children by name.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -80,7 +80,7 @@ describe(LayoutTree, () => {
     });
 
     test(`implements Iterable.`, () => {
-        const view = new LayoutTree({
+        const view = new LayoutViewTree({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
