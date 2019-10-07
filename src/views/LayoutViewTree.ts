@@ -45,7 +45,7 @@ export class LayoutViewTree implements ILayoutViewTree, Iterable<ILayoutViewTree
     public get children(): Iterable<ILayoutViewTree> { return this._childMap.values(); }
     public get parent(): ILayoutViewTree | undefined { return this._parent;}
 
-    findChild(name: string, recursive?: boolean): ILayoutViewTree | undefined {
+    public findChild(name: string, recursive?: boolean): ILayoutViewTree | undefined {
         let needle = this._childMap.get(name);
 
         if (!needle && recursive) {
@@ -72,7 +72,7 @@ export class LayoutViewTree implements ILayoutViewTree, Iterable<ILayoutViewTree
     }
 
     /// Iterate over all views in this view hierarchy (including `this`!).
-    [Symbol.iterator](): Iterator<ILayoutViewTree> {
+    public [Symbol.iterator](): Iterator<ILayoutViewTree> {
         const root = this;
 
         function* iterator(): Iterator<ILayoutViewTree> {
