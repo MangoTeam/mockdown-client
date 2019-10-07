@@ -1,3 +1,5 @@
+import { ILayoutViewTree } from '../views';
+
 export interface Identifiable<I> {
     readonly id: I;
 }
@@ -33,5 +35,18 @@ export class IndexedTree<I, T extends Identifiable<I>> {
         }
 
         return needle;
+    }
+
+    public [Symbol.iterator](): Iterator<IndexedTree<I, T>> {
+        const root = this;
+
+        function* iterator() {
+            yield root;
+            for (let child of root.children) {
+                yield* child;
+            }
+        }
+
+        return iterator();
     }
 }
