@@ -3,7 +3,7 @@ import { Strength, Variable } from 'kiwi.js';
 
 describe(LayoutSolver, () => {
     test(`creates edit variables for all attributes.`, () => {
-        const tree = new LayoutViewTree({
+        const tree = LayoutViewTree.fromJSON({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
@@ -25,7 +25,7 @@ describe(LayoutSolver, () => {
     });
     
     test(`allows view lookup by name.`, () => {
-        const tree = new LayoutViewTree({
+        const tree = LayoutViewTree.fromJSON({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
@@ -34,7 +34,7 @@ describe(LayoutSolver, () => {
     });
 
     test(`solves for width when left and right are suggested (width axiom).`, () => {
-        const tree = new LayoutViewTree({
+        const tree = LayoutViewTree.fromJSON({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
@@ -58,7 +58,7 @@ describe(LayoutSolver, () => {
     });
 
     test(`solves for height when top and bottom are suggested (height axiom).`, () => {
-        const tree = new LayoutViewTree({
+        const tree = LayoutViewTree.fromJSON({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
