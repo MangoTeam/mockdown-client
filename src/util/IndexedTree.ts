@@ -9,7 +9,7 @@ export interface IIndexedTree<I, T extends Identifiable<I>, Self extends IIndexe
 
     findChild(id: I, recursive?: boolean): Self | undefined;
 
-    [Symbol.iterator](): Iterator<T>;
+    // [Symbol.iterator](): Iterator<T>;
 }
 
 export class IndexedTree<I, T extends Identifiable<I>, Self extends IIndexedTree<I, T, Self>> implements IIndexedTree<I, T, Self> {
@@ -48,17 +48,17 @@ export class IndexedTree<I, T extends Identifiable<I>, Self extends IIndexedTree
 
         return needle;
     }
-
-    public [Symbol.iterator](): Iterator<T> {
-        const root = this;
-
-        function* iterator() {
-            yield root.value;
-            for (let child of root.children) {
-                yield* child;
-            }
-        }
-
-        return iterator();
-    }
+    //
+    // public [Symbol.iterator](): Iterator<T> {
+    //     const root = this;
+    //
+    //     function* iterator() {
+    //         yield root.value;
+    //         for (let child of root.children) {
+    //             yield* child;
+    //         }
+    //     }
+    //
+    //     return iterator();
+    // }
 }

@@ -68,8 +68,17 @@ export class LayoutViewTree implements ILayoutViewTree {
         return this._tree.findChild(id, recursive);
     }
 
-    [Symbol.iterator](): Iterator<ILayoutView> {
-        return this._tree[Symbol.iterator]();
+    [Symbol.iterator](): Iterator<ILayoutViewTree> {
+        const root = this;
+
+        function* iterator() {
+            yield root;
+            for (let child of root.children) {
+                yield* child;
+            }
+        }
+
+        return iterator();
     }
 
     /// Get the canonical JSON representation, which does not

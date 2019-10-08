@@ -5,6 +5,8 @@ export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView, ILayo
     view: ILayoutView
 
     readonly json: ILayoutViewTree.JSON;
+
+    [Symbol.iterator](): Iterator<ILayoutViewTree>;
 }
 
 export namespace ILayoutViewTree {

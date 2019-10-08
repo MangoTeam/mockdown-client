@@ -30,7 +30,7 @@ describe(LayoutSolver, () => {
             rect: [0, 0, 100, 100]
         });
         const solver = new LayoutSolver(tree);
-        expect(solver.getView('root')).toBe(tree.view);
+        expect(solver.getView('root')).toBe(tree);
     });
 
     test(`solves for width when left and right are suggested (width axiom).`, () => {
