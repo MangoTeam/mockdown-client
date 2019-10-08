@@ -2,7 +2,7 @@ import { IIdentifiable } from './IIdentifiable';
 
 export interface IIndexedTree<TKey, TValue extends IIdentifiable<TKey>> {
     value: TValue;
-    parent: this | undefined;
+    readonly parent: this | undefined;
     readonly children: ReadonlyArray<this>;
 
     clear(): void;

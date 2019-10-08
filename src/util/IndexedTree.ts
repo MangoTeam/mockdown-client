@@ -21,6 +21,7 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
     }
 
     public add(child: this) {
+        child._parent = this;
         this._childMap.set(child.value.id, child);
         return this;
     }
@@ -31,10 +32,6 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
 
     public get parent(): this | undefined {
         return this._parent;
-    }
-
-    public set parent(newParent: this | undefined) {
-        this._parent = newParent;
     }
 
     public find(id: TKey, recursive?: boolean): this | undefined {

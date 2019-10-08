@@ -5,15 +5,13 @@ import { IndexedTree } from '../util';
 
 export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements ILayoutViewTree {
 
-    static fromJSON(json: ILayoutViewTree.JSON, parent?: LayoutViewTree) {
+    static fromJSON(json: ILayoutViewTree.JSON) {
 
         const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
         const root = new this(value);
 
-        root.parent = parent;
-
         for (const childJSON of (json.children || [])) {
-            root.add(this.fromJSON(childJSON, root));
+            root.add(this.fromJSON(childJSON));
         }
 
         return root;
