@@ -1,31 +1,43 @@
-import { ILayoutViewTree } from '../views';
+import { Identifiable } from './Identifiable';
 
-export interface Identifiable<I> {
-    readonly id: I;
+export interface IIndexedTree<I, T extends Identifiable<I>, Self extends IIndexedTree<I, T, Self>> {
+    value: T;
+
+    // todo: these don't necessarily have to be readonly, there just isn't a write API yet.
+    readonly children: Iterable<Self>;
+    readonly parent: Self | undefined;
+
+    findChild(id: I, recursive?: boolean): Self | undefined;
+
+    [Symbol.iterator](): Iterator<T>;
 }
 
-export class IndexedTree<I, T extends Identifiable<I>> {
+export class IndexedTree<I, T extends Identifiable<I>, Self extends IIndexedTree<I, T, Self>> implements IIndexedTree<I, T, Self> {
     public value: T;
-    public parent?: IndexedTree<I, T>;
 
-    private _childMap: Map<I, IndexedTree<I, T>>;
+    private _childMap: Map<I, Self>;
+    private _parent?: Self;
 
-    public constructor(value: T, children: Iterable<IndexedTree<I, T>>) {
+    public constructor(value: T, children: Iterable<Self>, parent?: Self) {
         this.value = value;
-
         this._childMap = new Map(
             Array.from(children, (child) => {
                 return [child.value.id, child];
             })
         );
+        this._parent = parent;
     }
 
-    public get children(): Iterable<IndexedTree<I, T>> {
+    public get children(): Iterable<Self> {
         return this._childMap.values();
     }
 
-    public findChild(id: I, recursive?: boolean): IndexedTree<I, T> | undefined {
-        let needle = this._childMap.get(id);
+    public get parent(): Self | undefined {
+        return this._parent;
+    }
+
+    public findChild(id: I, recursive?: boolean): Self | undefined {
+        let needle: Self | undefined = this._childMap.get(id);
 
         if (!needle && recursive) {
             for (let haystack of this.children) {
@@ -37,11 +49,11 @@ export class IndexedTree<I, T extends Identifiable<I>> {
         return needle;
     }
 
-    public [Symbol.iterator](): Iterator<IndexedTree<I, T>> {
+    public [Symbol.iterator](): Iterator<T> {
         const root = this;
 
         function* iterator() {
-            yield root;
+            yield root.value;
             for (let child of root.children) {
                 yield* child;
             }

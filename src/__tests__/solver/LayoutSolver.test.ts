@@ -3,11 +3,11 @@ import { Strength, Variable } from 'kiwi.js';
 
 describe(LayoutSolver, () => {
     test(`creates edit variables for all attributes.`, () => {
-        const view = new LayoutViewTree({
+        const tree = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
-        const solver = new LayoutSolver(view);
+        const solver = new LayoutSolver(tree);
         solver.updateVariables();
 
         const [left, top, right, bottom, width, height] = solver.getVariables(
@@ -25,21 +25,21 @@ describe(LayoutSolver, () => {
     });
     
     test(`allows view lookup by name.`, () => {
-        const view = new LayoutViewTree({
+        const tree = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100]
         });
-        const solver = new LayoutSolver(view);
-        expect(solver.getView('root')).toBe(view);
+        const solver = new LayoutSolver(tree);
+        expect(solver.getView('root')).toBe(tree.view);
     });
 
     test(`solves for width when left and right are suggested (width axiom).`, () => {
-        const view = new LayoutViewTree({
+        const tree = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
         
-        const solver = new LayoutSolver(view);
+        const solver = new LayoutSolver(tree);
         const [left, right, width] = solver.getVariables(
             'root.left', 
             'root.right', 
@@ -58,12 +58,12 @@ describe(LayoutSolver, () => {
     });
 
     test(`solves for height when top and bottom are suggested (height axiom).`, () => {
-        const view = new LayoutViewTree({
+        const tree = new LayoutViewTree({
             name: 'root',
             rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
         });
         
-        const solver = new LayoutSolver(view);
+        const solver = new LayoutSolver(tree);
         const [top, bottom, height] = solver.getVariables(
             'root.top', 
             'root.bottom', 

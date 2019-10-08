@@ -1,17 +1,10 @@
+import { IIndexedTree } from '../util';
 import { ILayoutView } from './ILayoutView';
 
-export interface ILayoutViewTree extends ILayoutView {
+export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView, ILayoutViewTree>, ILayoutView {
     view: ILayoutView
 
-    // todo: these don't necessarily have to be readonly, there just isn't a write API yet.
-    readonly children: Iterable<ILayoutViewTree>;
-    readonly parent: ILayoutViewTree | undefined;
-
-    findChild(name: string, recursive?: boolean): ILayoutViewTree | undefined;
-
     readonly json: ILayoutViewTree.JSON;
-
-    [Symbol.iterator](): Iterator<ILayoutViewTree>;
 }
 
 export namespace ILayoutViewTree {

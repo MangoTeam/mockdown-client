@@ -1,6 +1,6 @@
 import { ILayoutView } from './ILayoutView';
 
-export class LayoutView implements ILayoutView{
+export class LayoutView implements ILayoutView {
     public name: string;
     public rect: ILayoutView.Rect;
 
@@ -8,6 +8,9 @@ export class LayoutView implements ILayoutView{
         this.name = name;
         this.rect = rect;
     }
+
+    // Implement Identifiable.
+    public get id(): string { return this.name }
 
     public get left(): number { return this.rect[0]; }
     public set left(newLeft: number) { this.rect[0] = newLeft; }

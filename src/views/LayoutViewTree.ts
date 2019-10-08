@@ -1,63 +1,75 @@
-import {ILayoutViewTree} from './ILayoutViewTree';
+import { ILayoutViewTree } from './ILayoutViewTree';
 import { ILayoutView } from './ILayoutView';
 import { LayoutView } from './LayoutView';
+import { IIndexedTree, IndexedTree } from '../util';
 
-export class LayoutViewTree implements ILayoutViewTree, Iterable<ILayoutViewTree> {
-    public view: ILayoutView;
+export class LayoutViewTree implements ILayoutViewTree {
+    private _tree: IIndexedTree<string, ILayoutView, ILayoutViewTree>;
+
+    public constructor(json: ILayoutViewTree.JSON, parent?: ILayoutViewTree) {
+        const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
+        const children = (json.children || []).map((json) => {
+            return new LayoutViewTree(json, this) as ILayoutViewTree;
+        });
+
+        this._tree = new IndexedTree(value, children, parent);
+    }
+
+    public get view(): ILayoutView { return this.value; }
+
+    public set view(newView: ILayoutView) { this.value = newView; }
 
     // Implement ILayoutView by delegation.
+
     public get name(): string { return this.view.name; }
+
     public set name(newName: string) { this.view.name = newName; }
 
+    public get id(): string { return this.name; }
+
     public get rect(): ILayoutView.Rect { return this.view.rect; }
+
     public set rect(newRect: ILayoutView.Rect) { this.view.rect = newRect; }
 
     public get left(): number { return this.view.left; }
+
     public set left(newLeft: number) { this.view.left = newLeft; }
 
     public get top(): number { return this.view.top; }
+
     public set top(newTop: number) { this.view.top = newTop; }
 
     public get right(): number { return this.view.right; }
+
     public set right(newRight: number) { this.view.right = newRight; }
 
     public get bottom(): number { return this.view.bottom; }
+
     public set bottom(newBottom: number) { this.view.bottom = newBottom; }
 
     public get width(): number { return this.view.width; }
+
     public get height(): number { return this.view.height; }
 
+    // Implement IIndexedTree by delegation.
+    public get value(): ILayoutView { return this._tree.value; }
 
-    private _childMap: Map<string, ILayoutViewTree>;
-    private _parent?: ILayoutViewTree;
+    public set value(newValue: ILayoutView) { this._tree.value = newValue; }
 
-    public constructor(json: ILayoutViewTree.JSON, parent?: ILayoutViewTree) {
-        this.view = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect);
-        this._childMap = new Map(
-            (json.children || []).map((json) => {
-                return [json.name, new LayoutViewTree(json, this)];
-            })
-        );
-
-        this._parent = parent;
+    public get children(): Iterable<ILayoutViewTree> {
+        return this._tree.children;
     }
 
-    public get children(): Iterable<ILayoutViewTree> { return this._childMap.values(); }
-    public get parent(): ILayoutViewTree | undefined { return this._parent;}
+    public get parent(): ILayoutViewTree | undefined {
+        return this._tree.parent;
+    }
 
-    public findChild(name: string, recursive?: boolean): ILayoutViewTree | undefined {
-        let needle = this._childMap.get(name);
+    findChild(id: string, recursive?: boolean | undefined): ILayoutViewTree | undefined {
+        return this._tree.findChild(id, recursive);
+    }
 
-        if (!needle && recursive) {
-            for (let haystack of this.children) {
-                needle = haystack.findChild(name, recursive);
-                if (needle) {
-                    return needle;
-                }
-            }
-        }
-
-        return needle;
+    [Symbol.iterator](): Iterator<ILayoutView> {
+        return this._tree[Symbol.iterator]();
     }
 
     /// Get the canonical JSON representation, which does not
@@ -69,19 +81,5 @@ export class LayoutViewTree implements ILayoutViewTree, Iterable<ILayoutViewTree
             rect: [...this.view.rect] as ILayoutView.Rect,
             children: Array.from(this.children, (child) => child.json)
         }
-    }
-
-    /// Iterate over all views in this view hierarchy (including `this`!).
-    public [Symbol.iterator](): Iterator<ILayoutViewTree> {
-        const root = this;
-
-        function* iterator(): Iterator<ILayoutViewTree> {
-            yield root;
-            for (let child of root.children) {
-                yield* child;
-            }
-        }
-
-        return iterator();
     }
 }
