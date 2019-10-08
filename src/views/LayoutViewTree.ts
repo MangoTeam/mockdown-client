@@ -1,18 +1,22 @@
 import { ILayoutViewTree } from './ILayoutViewTree';
 import { ILayoutView } from './ILayoutView';
 import { LayoutView } from './LayoutView';
-import { IIndexedTree, IndexedTree } from '../util';
+import { IndexedTree } from '../util';
 
-export class LayoutViewTree implements ILayoutViewTree {
-    private _tree: IIndexedTree<string, ILayoutView, ILayoutViewTree>;
+export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements ILayoutViewTree {
 
-    public constructor(json: ILayoutViewTree.JSON, parent?: ILayoutViewTree) {
+    static fromJSON(json: ILayoutViewTree.JSON, parent?: LayoutViewTree) {
+
         const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
-        const children = (json.children || []).map((json) => {
-            return new LayoutViewTree(json, this) as ILayoutViewTree;
-        });
+        const root = new this(value);
 
-        this._tree = new IndexedTree(value, children, parent);
+        root.parent = parent;
+
+        for (const childJSON of (json.children || [])) {
+            root.add(this.fromJSON(childJSON, root));
+        }
+
+        return root;
     }
 
     public get view(): ILayoutView { return this.value; }
@@ -50,36 +54,6 @@ export class LayoutViewTree implements ILayoutViewTree {
     public get width(): number { return this.view.width; }
 
     public get height(): number { return this.view.height; }
-
-    // Implement IIndexedTree by delegation.
-    public get value(): ILayoutView { return this._tree.value; }
-
-    public set value(newValue: ILayoutView) { this._tree.value = newValue; }
-
-    public get children(): Iterable<ILayoutViewTree> {
-        return this._tree.children;
-    }
-
-    public get parent(): ILayoutViewTree | undefined {
-        return this._tree.parent;
-    }
-
-    findChild(id: string, recursive?: boolean | undefined): ILayoutViewTree | undefined {
-        return this._tree.findChild(id, recursive);
-    }
-
-    [Symbol.iterator](): Iterator<ILayoutViewTree> {
-        const root = this;
-
-        function* iterator() {
-            yield root;
-            for (let child of root.children) {
-                yield* child;
-            }
-        }
-
-        return iterator();
-    }
 
     /// Get the canonical JSON representation, which does not
     /// contain convenience accessors for left, right,

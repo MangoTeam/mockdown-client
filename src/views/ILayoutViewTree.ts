@@ -1,12 +1,9 @@
 import { IIndexedTree } from '../util';
 import { ILayoutView } from './ILayoutView';
 
-export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView, ILayoutViewTree>, ILayoutView {
+export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView>, ILayoutView {
     view: ILayoutView
-
     readonly json: ILayoutViewTree.JSON;
-
-    [Symbol.iterator](): Iterator<ILayoutViewTree>;
 }
 
 export namespace ILayoutViewTree {

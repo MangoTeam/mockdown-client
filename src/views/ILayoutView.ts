@@ -1,6 +1,6 @@
-import { Identifiable } from '../util';
+import { IIdentifiable } from '../util';
 
-export interface ILayoutView extends Identifiable<string> {
+export interface ILayoutView extends IIdentifiable<string> {
     name: string;
     rect: ILayoutView.Rect;
 

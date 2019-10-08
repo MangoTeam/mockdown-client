@@ -2,7 +2,7 @@ import { ILayoutViewTree, LayoutViewTree } from '../..';
 
 describe(LayoutViewTree, () => {
     test(`can be constructed from JSON.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -10,7 +10,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`can be constructed from JSON without 'children'.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [0, 0, 100, 100]
         });
@@ -26,13 +26,13 @@ describe(LayoutViewTree, () => {
             ]
         };
 
-        const view = new LayoutViewTree(json);
+        const view = LayoutViewTree.fromJSON(json);
 
         expect(view.json).toEqual(json);
     });
 
     test(`implements attribute getters.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [10, 10, 100, 100],
             children: []
@@ -47,7 +47,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`implements attribute setters.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -67,7 +67,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`allows lookup of children by name.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -75,12 +75,12 @@ describe(LayoutViewTree, () => {
             ]
         });
 
-        const child = view.findChild("a");
+        const child = view.find("a");
         expect(child).toBe(Array.from(view.children)[0]);
     });
 
     test(`implements Iterable.`, () => {
-        const view = new LayoutViewTree({
+        const view = LayoutViewTree.fromJSON({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [

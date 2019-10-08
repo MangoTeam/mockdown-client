@@ -8,4 +8,3 @@ import 'isomorphic-fetch';
 export * from './api';
 export * from './solver';
 export * from './views';
-export {Attribute} from "./views/Attribute";
