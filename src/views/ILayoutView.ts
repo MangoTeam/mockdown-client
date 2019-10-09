@@ -1,4 +1,4 @@
-import { IIdentifiable } from '../util';
+import { IIdentifiable, Rect as UtilRect } from '../util';
 
 export interface ILayoutView extends IIdentifiable<string> {
     name: string;
@@ -13,5 +13,5 @@ export interface ILayoutView extends IIdentifiable<string> {
 }
 
 export namespace ILayoutView {
-    export type Rect = [number, number, number, number];
+    export type Rect = UtilRect;
 }

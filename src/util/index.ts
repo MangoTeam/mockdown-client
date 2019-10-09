@@ -1,3 +1,4 @@
 export * from './IIdentifiable';
 export * from './IndexedTree';
-export { IIndexedTree } from './IIndexedTree';
+export * from './IIndexedTree';
+export * from './Geometry';
