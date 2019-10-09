@@ -23,6 +23,21 @@ export namespace Rect {
 
     export function isDegenerate(rect: Rect) { return Rect.area(rect) == 0; }
 
+    export function intersection(rect1: Rect, rect2: Rect): Rect {
+        // See diagram below in difference for explanation.
+
+        const [l1, t1, r1, b1] = rect1;
+        const [l2, t2, r2, b2] = rect2;
+
+        const x2 = Math.max(l1, l2);
+        const x3 = Math.min(r1, r2);
+
+        const y2 = Math.max(t1, t2);
+        const y3 = Math.min(b1, b2);
+
+        return [x2, y2, x3, y3];
+    }
+
     export function difference(rect1: Rect, rect2: Rect): Region {
         /*
                 X = intersection (might be empty, we don't care)

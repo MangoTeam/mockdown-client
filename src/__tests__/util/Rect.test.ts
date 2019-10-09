@@ -19,6 +19,65 @@ describe('Rect', () => {
        expect(Rect.isDegenerate([0, 0, 10, 10])).toBe(false);
    });
 
+   test('can have an intersection Rect calculated w.r.t. another Rect', () => {
+       // No intersection at all.
+       {
+           const rect1 = [0, 0, 10, 10] as Rect;
+           const rect2 = [10, 10, 20, 20] as Rect;
+
+           expect(Rect.isDegenerate(Rect.intersection(rect1, rect2)));
+       }
+
+       // Complete intersection.
+       {
+           const rect1 = [0, 0, 10, 10] as Rect;
+           const rect2 = [0, 0, 10, 10] as Rect;
+
+           expect(Rect.intersection(rect1, rect2)).toEqual(rect1);
+           expect(Rect.intersection(rect1, rect2)).toEqual(rect2);
+       }
+
+       // Partial X intersection.
+       {
+           const rect1 = [0, 0, 10, 10] as Rect;
+           const rect2 = [5, 0, 15, 10] as Rect;
+
+           expect(Rect.intersection(rect1, rect2)).toEqual(
+               [5, 0, 10, 10]
+           );
+       }
+
+       // Partial Y intersection.
+       {
+           const rect1 = [0, 0, 10, 10] as Rect;
+           const rect2 = [0, 5, 10, 15] as Rect;
+
+           expect(Rect.intersection(rect1, rect2)).toEqual(
+               [0, 5, 10, 10]
+           );
+       }
+
+       // TL/BR diagonal intersection.
+       {
+           const rect1 = [0, 0, 10, 10] as Rect;
+           const rect2 = [5, 5, 15, 15] as Rect;
+
+           expect(Rect.intersection(rect1, rect2)).toEqual(
+               [5, 5, 10, 10]
+           );
+       }
+
+       // TR/BL diagonal intersection.
+       {
+           const rect1 = [5, 0, 15, 10] as Rect;
+           const rect2 = [0, 5, 10, 15] as Rect;
+
+           expect(Rect.intersection(rect1, rect2)).toEqual(
+               [5, 5, 10, 10]
+           );
+       }
+   });
+
    test('can have a difference Region calculated w.r.t. another Rect.', () => {
        // No intersection at all.
        {
