@@ -60,7 +60,7 @@ describe('Rect', () => {
            ]));
        }
 
-       // Diagonal intersection.
+       // TL/BR diagonal intersection.
        {
            const rect1 = [0, 0, 10, 10] as Rect;
            const rect2 = [5, 5, 15, 15] as Rect;
@@ -72,6 +72,21 @@ describe('Rect', () => {
                [10, 5, 15, 10],
                [5, 10, 10, 15],
                [10, 10, 15, 15]
+           ]));
+       }
+
+       // TR/BL diagonal intersection.
+       {
+           const rect1 = [5, 0, 15, 10] as Rect;
+           const rect2 = [0, 5, 10, 15] as Rect;
+
+           expect(Rect.difference(rect1, rect2)).toEqual(new Set<Rect>([
+               [5, 0, 10, 5],
+               [10, 0, 15, 5],
+               [0, 5, 5, 10],
+               [10, 5, 15, 10],
+               [0, 10, 5, 15],
+               [5, 10, 10, 15]
            ]));
        }
    });

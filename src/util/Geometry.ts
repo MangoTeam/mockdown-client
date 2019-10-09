@@ -3,15 +3,7 @@ export type Rect = [number, number, number, number];
 export type Region = Set<Rect>;
 
 export namespace Region {
-    export function area(region: Region) {
-        return [...region].reduce((sum, rect) => {
-            return sum + Rect.area(rect);
-        }, 0)
-    }
 
-    export function isDegenerate(region: Region) {
-        return Region.area(region) == 0;
-    }
 }
 
 export namespace Rect {
