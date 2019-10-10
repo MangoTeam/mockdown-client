@@ -16,18 +16,27 @@ export class ConstraintParser {
 
     parse(json: any, strength = kiwi.Strength.required) {
         const variableMap = this._variableMap;
+
+        const kind = json.kind;
+
         const y = variableMap.get(json.y);
         if (y === undefined) {
             throw new Error(`Parsing failed: variable ${json.y} does not exist.`);
         }
 
         const x = variableMap.get(json.x);
-        if (x === undefined) {
+        if (x === undefined && kind !== "absolute_size") {
             throw new Error(`Parsing failed: variable ${json.x} does not exist.`);
         }
 
         const { b, op, a } = json;
-        let rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+
+        let rhs;
+        if (x) {
+            rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+        } else {
+            rhs = new kiwi.Expression(b);
+        }
 
         let kiwiOp: kiwi.Operator | undefined = undefined;
         switch (op) {
