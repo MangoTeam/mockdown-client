@@ -81,6 +81,25 @@ describe(LayoutSolver, () => {
         expect(height.value()).toBe(100);
     });
 
+    test(`modifying variables`, () => {
+        const tree = LayoutViewTree.fromJSON({
+            name: 'root',
+            rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
+        });
+        
+        const solver = new LayoutSolver(tree);
+        const [top, bottom, height] = solver.getVariables(
+            'root.top', 
+            'root.bottom', 
+            'root.height'
+        ) as Array<Variable>;
+
+        top.setValue(10);
+        
+        solver.updateView();
+        expect(solver.root.json.rect).toBe([0, 10, 100, 100]);
+    })
+
     test(`adding and modifying children`, () => {
         const tree = LayoutViewTree.fromJSON({
             name: 'root',
