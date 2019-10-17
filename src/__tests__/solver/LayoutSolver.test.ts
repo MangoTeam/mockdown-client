@@ -80,4 +80,58 @@ describe(LayoutSolver, () => {
 
         expect(height.value()).toBe(100);
     });
+
+    test(`adding and modifying children`, () => {
+        const tree = LayoutViewTree.fromJSON({
+            name: 'root',
+            rect: [0, 0, 100, 100] // note: this doesn't matter wrt the solver.
+        });
+        
+        const solver = new LayoutSolver(tree); 
+
+        const newRectJSON : ILayoutViewTree.JSON = { name: "c"
+                            , rect: [25, 25, 75, 75]
+                            , children: []
+                            };
+
+        const retrievedRoot = solver.getView('root');
+        const retrievedRootJSON = retrievedRoot.json;
+        
+        expect(retrievedRootJSON.children);
+
+        retrievedRootJSON.children.push(newRectJSON);
+
+        const view = LayoutViewTree.fromJSON(retrievedRootJSON);
+        const newSolver = new LayoutSolver(view);
+
+        const [left, top, right, bottom] = newSolver.getVariables(
+            `c.left`,
+            `c.top`, 
+            `c.right`,
+            `c.bottom`
+        ) as Array<Variable>;
+
+        debugger
+
+        newSolver.addEditVariable(left, Strength.strong);
+        newSolver.suggestValue(left, 50);
+
+        newSolver.addEditVariable(top, Strength.strong);
+        newSolver.suggestValue(top, 50);
+
+        newSolver.addEditVariable(right, Strength.strong);
+        newSolver.suggestValue(right, 80);
+
+        newSolver.addEditVariable(bottom, Strength.strong);
+        newSolver.suggestValue(bottom, 80);
+
+        newSolver.updateVariables();
+        newSolver.updateView();
+
+        const updatedRoot = newSolver.getView('root') as ILayoutViewTree
+
+        expect(updatedRoot.rect).toEqual([0, 0, 100, 100]);
+        // is actually [0,0,0,0]
+
+    });
 });
