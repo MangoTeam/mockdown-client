@@ -89,6 +89,20 @@ describe(LayoutViewTree, () => {
             ]
         });
 
+        const views = Array.from(view)
+        expect(views).toHaveLength(3)
+    });
+
+    test(`implements Iterable.`, () => {
+        const view = LayoutViewTree.fromJSON({
+            name: "root",
+            rect: [0, 0, 100, 100],
+            children: [
+                {name: "a", rect: [0, 0, 50, 50], children: []},
+                {name: "b", rect: [50, 50, 100, 100], children: []},
+            ]
+        });
+
         const views = Array.from(view).map((v) => v.name);
         expect(views).toContain("root");
         expect(views).toContain("a");
