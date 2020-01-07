@@ -35,7 +35,7 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
     }
 
     public find(id: TKey, recursive?: boolean): this | undefined {
-        let needle: this | undefined = this._childMap.get(id);
+        let needle: this | undefined = (this.value.id == id ? this : this._childMap.get(id));
 
         if (!needle && recursive) {
             for (let haystack of this.children) {
