@@ -35,7 +35,7 @@ describe(ConstraintParser, () => {
                 a: 1,
                 x: "bar.left",
                 b: 0
-            }, Strength.weak);
+            }, Strength.medium);
         }).not.toThrowError();
     });
 
