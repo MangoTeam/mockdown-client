@@ -9,12 +9,6 @@ describe(LayoutViewTree, () => {
         });
     });
 
-    test(`can be constructed from JSON without 'children'.`, () => {
-        const view = LayoutViewTree.fromJSON({
-            name: "root",
-            rect: [0, 0, 100, 100]
-        });
-    });
 
     test(`can be converted into JSON (and back)`, () => {
         const json: ILayoutViewTree.JSON = {

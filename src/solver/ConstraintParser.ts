@@ -22,12 +22,19 @@ export class ConstraintParser {
         }
 
         const x = variableMap.get(json.x);
-        if (x === undefined) {
+
+        if (json.x !== "None" && x === undefined) {
             throw new Error(`Parsing failed: variable ${json.x} does not exist.`);
         }
 
         const { b, op, a } = json;
-        let rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+
+        let rhs;
+        if (json.x === "None") {
+            rhs = new kiwi.Expression(b)
+        } else {
+            rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+        }
 
         let kiwiOp: kiwi.Operator | undefined = undefined;
         switch (op) {

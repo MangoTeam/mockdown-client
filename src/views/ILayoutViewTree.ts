@@ -10,6 +10,6 @@ export namespace ILayoutViewTree {
     export interface JSON {
         name: string;
         rect: ILayoutView.Rect;
-        children?: Array<ILayoutViewTree.JSON>;
+        children: Array<ILayoutViewTree.JSON>;
     }
 }
