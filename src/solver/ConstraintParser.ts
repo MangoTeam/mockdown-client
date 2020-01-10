@@ -2,19 +2,50 @@ import * as kiwi from 'kiwi.js';
 
 import {ILayoutSolver} from "./ILayoutSolver";
 import VariableMap = ILayoutSolver.VariableMap;
+import IParseOptions = ConstraintParser.IParseOptions;
 
 // Currently unused.
 const constraintRegex = 
     /^([\w.]+)\s*(=|≥|≤|>=|<=)\s*(\d+)?\s*\*?\s*([\w.]+)\s+([+-])\s+(\d+)$/;
 
 export class ConstraintParser {
-    private _variableMap: VariableMap;
+    private readonly _variableMap: VariableMap;
 
     constructor(variableMap: VariableMap) {
         this._variableMap = variableMap;
     }
 
-    parse(json: any, strengthOverride?: [number, number, number]) {
+    static VALID_OPS = new Set(['=', '==', '≥', '>=', '≤', '<=']);
+
+    static isConstraintJSON(obj: any): obj is ConstraintParser.IConstraintJSON {
+        return (
+            ('kind' in obj ? (typeof(obj.kind) === 'string') : true)
+            && ('a' in obj ? (typeof(obj.a) === 'number') : true)
+            && ('b' in obj ? (typeof(obj.b) === 'number') : true)
+            && ('x' in obj ? (typeof(obj.x) === 'string') : true)
+            && ('y' in obj && (typeof(obj.y) === 'string'))
+            && 'op' in obj && ConstraintParser.VALID_OPS.has(obj.op)
+        )
+    }
+
+    static normalizeStrength(param: number | [number, number, number] | undefined): (number | undefined) {
+        if (typeof param === 'number') return param;
+        if (typeof param === 'undefined') return param;
+        return kiwi.Strength.create(...param);
+    }
+
+    static pickStrength(...strengths: (number | [number, number, number] | undefined)[]) : (number | undefined) {
+        function reduction(z: number | undefined, strength: number | [number, number, number] | undefined) {
+            return z || ConstraintParser.normalizeStrength(strength);
+        }
+        return strengths.reduce(reduction, undefined);
+    }
+
+    parse(json: any, options: IParseOptions = {}) {
+        if (!ConstraintParser.isConstraintJSON(json)) {
+            throw new Error("Got malformed constraint JSON.");
+        }
+
         const variableMap = this._variableMap;
 
         const kind = json.kind;
@@ -24,20 +55,18 @@ export class ConstraintParser {
             throw new Error(`Parsing failed: variable ${json.y} does not exist.`);
         }
 
-        const x = variableMap.get(json.x);
+        const x = json.x ? variableMap.get(json.x) : undefined;
         if (x === undefined && kind !== "absolute_size") {
             throw new Error(`Parsing failed: variable ${json.x} does not exist.`);
         }
 
         const { b, op, a } = json;
 
-        const jsonStrength = json.get('strength') as ([number, number, number] | undefined);
-        if (jsonStrength && jsonStrength.length !== 3) {
-            throw new Error("now you have fucked up");
-        }
+        const strength = ConstraintParser.pickStrength(
+            json.strength,
+            options.strength
+        ) || kiwi.Strength.required;
 
-        const strengthParams = strengthOverride || jsonStrength;
-        const strength = strengthParams ? kiwi.Strength.create(...strengthParams) : undefined;
 
         let rhs;
         if (x) {
@@ -67,5 +96,21 @@ export class ConstraintParser {
         }
 
         return new kiwi.Constraint(y, kiwiOp, rhs, strength);
+    }
+}
+
+export namespace ConstraintParser {
+    export interface IConstraintJSON {
+        kind?: string,
+        a?: number;
+        b?: number;
+        x?: string;
+        y: string;
+        op: '=' | '==' | '≥' | '>=' | '≤' | '<=';
+        strength?: number | [number, number, number];
+    }
+
+    export interface IParseOptions {
+        strength?: number | [number, number, number];
     }
 }
