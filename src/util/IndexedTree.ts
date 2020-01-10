@@ -39,7 +39,7 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
 
         if (!needle && recursive) {
             for (let haystack of this.children) {
-                needle = haystack.find(name, recursive);
+                needle = haystack.find(id, recursive);
                 if (needle) return needle;
             }
         }

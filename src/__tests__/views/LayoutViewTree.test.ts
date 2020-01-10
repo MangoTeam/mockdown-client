@@ -31,6 +31,32 @@ describe(LayoutViewTree, () => {
         expect(view.json).toEqual(json);
     });
 
+    test(`initializes depth for subtrees on creation.`, () => {
+        const json: ILayoutViewTree.JSON = {
+            name: "root",
+            rect: [0, 0, 100, 100],
+            children: [
+                {
+                    name: "a",
+                    rect: [0, 0, 50, 50],
+                    children: [
+                        {
+                            name: "b",
+                            rect: [50, 50, 100, 100],
+                            children: []
+                        },
+                    ]
+                },
+            ]
+        };
+
+        const view = LayoutViewTree.fromJSON(json);
+
+        expect(view.depth).toEqual(0);
+        expect(view.find("a")!.depth).toEqual(1);
+        expect(view.find("b", true)!.depth).toEqual(2);
+    });
+
     test(`implements attribute getters.`, () => {
         const view = LayoutViewTree.fromJSON({
             name: "root",

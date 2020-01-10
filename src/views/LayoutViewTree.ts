@@ -9,8 +9,7 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
 
     private constructor(value: ILayoutView, depth: number = 0) {
         super(value);
-        this._depth = depth; // to quiet the compiler, even if it's redundant...
-        this._updateDepth(depth);
+        this._depth = depth;
     }
 
     private _updateDepth(depth: number) {
@@ -20,15 +19,16 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
         }
     }
 
-    static fromJSON(json: ILayoutViewTree.JSON) {
+    static fromJSON(json: ILayoutViewTree.JSON, depth: number = 0) {
 
         const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
-        const root = new this(value);
+        const root = new this(value, depth);
 
         for (const childJSON of (json.children || [])) {
             root.add(this.fromJSON(childJSON));
         }
 
+        root._updateDepth(depth);
         return root;
     }
 
