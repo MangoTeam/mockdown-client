@@ -4,11 +4,13 @@ import { IIndexedTree } from './IIndexedTree';
 export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements IIndexedTree<TKey, TValue> {
     public readonly value: TValue;
 
+    private _depth: number;
     private _childMap: Map<TKey, this>;
     private _parent?: this;
 
-    public constructor(value: TValue) {
+    public constructor(value: TValue, depth: number = 0) {
         this.value = value;
+        this._depth = depth;
         this._childMap = new Map();
     }
 
@@ -23,11 +25,19 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
     public add(child: this) {
         child._parent = this;
         this._childMap.set(child.value.id, child);
+
+        // Don't forget to update depths in the child view/subtree.
+        child._updateDepth(this.depth + 1);
+
         return this;
     }
 
     public delete(key: TKey) {
         return this._childMap.delete(key);
+    }
+
+    public get depth(): number {
+        return this._depth;
     }
 
     public get parent(): this | undefined {
@@ -58,5 +68,12 @@ export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements II
         }
 
         return iterator();
+    }
+
+    protected _updateDepth(depth: number) {
+        this._depth = depth;
+        for (const child of this.children) {
+            child._updateDepth(depth + 1);
+        }
     }
 }

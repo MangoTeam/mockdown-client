@@ -5,6 +5,8 @@ export interface IIndexedTree<TKey, TValue extends IIdentifiable<TKey>> {
     readonly parent: this | undefined;
     readonly children: ReadonlyArray<this>;
 
+    readonly depth: number
+
     clear(): void;
     add(child: this): this;
     delete(key: TKey): boolean;
