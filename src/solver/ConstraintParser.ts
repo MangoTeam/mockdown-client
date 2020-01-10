@@ -35,9 +35,9 @@ export class ConstraintParser {
         if (jsonStrength && jsonStrength.length !== 3) {
             throw new Error("now you have fucked up");
         }
-        const strength = strengthOverride
-            || (jsonStrength ? kiwi.Strength.create(...jsonStrength) : undefined)
-            || kiwi.Strength.required;
+
+        const strengthParams = strengthOverride || jsonStrength;
+        const strength = strengthParams ? kiwi.Strength.create(...strengthParams) : undefined;
 
         let rhs;
         if (x) {
