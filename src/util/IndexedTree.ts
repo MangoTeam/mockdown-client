@@ -2,7 +2,7 @@ import { IIdentifiable } from './IIdentifiable';
 import { IIndexedTree } from './IIndexedTree';
 
 export class IndexedTree<TKey, TValue extends IIdentifiable<TKey>> implements IIndexedTree<TKey, TValue> {
-    public value: TValue;
+    public readonly value: TValue;
 
     private _childMap: Map<TKey, this>;
     private _parent?: this;
