@@ -14,7 +14,7 @@ export class ConstraintParser {
         this._variableMap = variableMap;
     }
 
-    parse(json: any, strength = kiwi.Strength.required) {
+    parse(json: any, strengthOverride?: [number, number, number]) {
         const variableMap = this._variableMap;
 
         const kind = json.kind;
@@ -30,6 +30,14 @@ export class ConstraintParser {
         }
 
         const { b, op, a } = json;
+
+        const jsonStrength = json.get('strength') as ([number, number, number] | undefined);
+        if (jsonStrength && jsonStrength.length !== 3) {
+            throw new Error("now you have fucked up");
+        }
+        const strength = strengthOverride
+            || (jsonStrength ? kiwi.Strength.create(...jsonStrength) : undefined)
+            || kiwi.Strength.required;
 
         let rhs;
         if (x) {
