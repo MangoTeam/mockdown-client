@@ -2,7 +2,7 @@ import { IIndexedTree } from '../util';
 import { ILayoutView } from './ILayoutView';
 
 export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView>, ILayoutView {
-    view: ILayoutView
+    readonly view: ILayoutView
     readonly json: ILayoutViewTree.JSON;
 }
 

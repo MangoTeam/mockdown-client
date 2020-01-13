@@ -35,7 +35,17 @@ describe(ConstraintParser, () => {
                 a: 1,
                 x: "bar.left",
                 b: 0
-            }, Strength.weak);
+            }, {strength: Strength.medium});
+        }).not.toThrowError();
+
+        expect(() => {
+            parser.parse({
+                y: "foo.right",
+                op: ">=",
+                a: 1,
+                x: "bar.left",
+                b: 0
+            }, {strength: [0, 100, 0]});
         }).not.toThrowError();
     });
 

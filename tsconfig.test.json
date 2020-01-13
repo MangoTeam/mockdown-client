@@ -1,10 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "esnext",
     "lib": [
       "dom",
       "es2020"
     ],
+    "downlevelIteration": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "moduleResolution": "node",
     "esModuleInterop": true
   }
 }

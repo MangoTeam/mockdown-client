@@ -1,9 +1,11 @@
 import { IIdentifiable } from './IIdentifiable';
 
 export interface IIndexedTree<TKey, TValue extends IIdentifiable<TKey>> {
-    value: TValue;
+    readonly value: TValue;
     readonly parent: this | undefined;
     readonly children: ReadonlyArray<this>;
+
+    readonly depth: number
 
     clear(): void;
     add(child: this): this;

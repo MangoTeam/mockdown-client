@@ -1,4 +1,4 @@
-import { MockdownClient } from "../..";
+import { MockdownClient } from '../../api';
 
 describe(MockdownClient, () => {
    test(`write more tests.`, () => {

@@ -5,6 +5,11 @@ import { IndexedTree } from '../util';
 
 export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements ILayoutViewTree {
 
+
+    private constructor(value: ILayoutView) {
+        super(value, 0);
+    }
+
     static fromJSON(json: ILayoutViewTree.JSON) {
 
         const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
@@ -18,8 +23,6 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
     }
 
     public get view(): ILayoutView { return this.value; }
-
-    public set view(newView: ILayoutView) { this.value = newView; }
 
     // Implement ILayoutView by delegation.
 
