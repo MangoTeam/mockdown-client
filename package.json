@@ -5,6 +5,7 @@
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "test": "jest",
+    "type": "module",
     "repository": "github.com/MangoTeam/mockdown-client",
     "author": "Dylan A. Lukes <dlukes@eng.ucsd.edu>",
     "license": "MIT",
