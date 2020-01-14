@@ -1,4 +1,4 @@
-import * as kiwi from 'kiwi.js';
+import * as kiwi from 'flightlessbird.js';
 
 import {ILayoutSolver} from "./ILayoutSolver";
 import VariableMap = ILayoutSolver.VariableMap;

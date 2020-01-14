@@ -15,7 +15,7 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
         const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
         const root = new this(value);
 
-        for (const childJSON of (json.children)) {
+        for (const childJSON of (json.children || [])) {
             root.add(this.fromJSON(childJSON));
         }
 

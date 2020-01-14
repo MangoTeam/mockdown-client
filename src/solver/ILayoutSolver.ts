@@ -1,4 +1,4 @@
-import { Solver, Variable } from "kiwi.js";
+import { Solver, Variable } from "flightlessbird.js";
 import { ILayoutViewTree } from "../views";
 
 export interface ILayoutSolver extends Solver {
