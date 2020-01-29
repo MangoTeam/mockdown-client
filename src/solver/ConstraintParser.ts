@@ -57,6 +57,8 @@ export class ConstraintParser {
 
         const x = json.x ? variableMap.get(json.x) : undefined;
         if (x === undefined && kind !== "absolute_size") {
+            console.error('variables:');
+            console.error([...variableMap.keys()]);
             throw new Error(`Parsing failed: variable ${json.x} does not exist.`);
         }
 

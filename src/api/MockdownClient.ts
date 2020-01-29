@@ -1,6 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import { ILayoutViewTree } from '../views';
 
+import { ConstraintParser } from '../solver'
+
 export class MockdownClient {
     private _host: string;
     private _port: string;
@@ -14,8 +16,9 @@ export class MockdownClient {
         this._synthesizeEndpoint = `http://${host}:${port}/api/synthesize`;
     }
 
-    async fetch(examples: Array<ILayoutViewTree.JSON>, filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE) {
-        const body = JSON.stringify({ 'examples': examples, 'pruning': filter});
+    async fetch(examples: Array<ILayoutViewTree.JSON>, dims: [number, number], filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE): Promise<ConstraintParser.IConstraintJSON[]> {
+        // console.log(filter);
+        const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'lower': dims[0], 'upper': dims[1]});
 
         const response = await fetch(this._synthesizeEndpoint, {
             method: 'POST',
