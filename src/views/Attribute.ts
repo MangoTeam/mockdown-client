@@ -4,7 +4,9 @@ export enum Attribute {
     Right = "right",
     Bottom = "bottom",
     Width = "width",
-    Height = "height"
+    Height = "height",
+    CenterX = "center_x",
+    CenterY = "center_y"
 }
 
 export namespace Attribute {
