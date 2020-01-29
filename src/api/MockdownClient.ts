@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch';
 import { ILayoutViewTree } from '../views';
 
 import { ConstraintParser } from '../solver'
