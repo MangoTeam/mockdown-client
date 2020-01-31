@@ -21,7 +21,7 @@ export class MockdownClient {
             'min_w': dims[0],
             'max_w': dims[1]
         }
-        console.log(bounds);
+        // console.log(bounds);
         const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'bounds': bounds });
 
         const response = await fetch(this._synthesizeEndpoint, {
