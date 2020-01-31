@@ -17,7 +17,12 @@ export class MockdownClient {
 
     async fetch(examples: Array<ILayoutViewTree.JSON>, dims: [number, number], filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE): Promise<ConstraintParser.IConstraintJSON[]> {
         // console.log(filter);
-        const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'lower': dims[0], 'upper': dims[1]});
+        const bounds = {
+            'min_w': dims[0],
+            'max_w': dims[1]
+        }
+        console.log(bounds);
+        const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'bounds': bounds });
 
         const response = await fetch(this._synthesizeEndpoint, {
             method: 'POST',
