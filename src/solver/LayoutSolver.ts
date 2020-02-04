@@ -51,19 +51,27 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
         // Add the axiomatic constraints, e.g. width = right - left, width >= 0.
         for (const view of viewMap.values()) {
-            let [left, top, right, bottom, width, height] = attrs.map((attr) => {
+            let [left, top, right, bottom, width, height, centerx, centery] = attrs.map((attr) => {
                 return variableMap.get(`${view.name}.${attr}`)!;
             });
 
-            let widthAxiomRHS = new Expression(right.minus(left));
+            let widthAxiomRHS = right.minus(left);
             let widthAxiom = new Constraint(
                 width, Operator.Eq, widthAxiomRHS,
                 Strength.required
             );
+            let centerYAxiom = new Constraint(
+                centery, Operator.Eq, top.plus(height.divide(2.0)),
+                Strength.required
+            )
+            let centerXAxiom = new Constraint(
+                centerx, Operator.Eq, left.plus(width.divide(2.0)),
+                Strength.required
+            )
 
             let positiveWidthAxiom = new Constraint(width, Operator.Ge, new Expression(0));
 
-            let heightAxiomRHS = new Expression(bottom.minus(top));
+            let heightAxiomRHS = bottom.minus(top);
             let heightAxiom = new Constraint(
                 height, Operator.Eq, heightAxiomRHS,
                 Strength.required
@@ -75,6 +83,8 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             this.addConstraint(widthAxiom);
             this.addConstraint(positiveHeightAxiom);
             this.addConstraint(heightAxiom);
+            this.addConstraint(centerXAxiom);
+            this.addConstraint(centerYAxiom);
         }
     }
 
