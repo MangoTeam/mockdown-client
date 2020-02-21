@@ -24,5 +24,11 @@ export namespace ILayoutViewTree {
 
             return iterator(root);
         }
+
+        export function find(pojo: POJO, predicate: (pojo: POJO) => boolean): POJO | undefined {
+            const it = preorderIterator(pojo);
+            const nodes = Array.from(it);
+            return nodes.find(predicate);
+        }
     }
 }
