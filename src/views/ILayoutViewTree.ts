@@ -14,7 +14,7 @@ export namespace ILayoutViewTree {
     }
 
     export namespace POJO {
-        export function preorderIterator(root: POJO): Iterator<POJO> {
+        export function preorderIterator(root: POJO): Iterator<POJO> & Iterable<POJO> {
             function* iterator(pojo: POJO): Generator<POJO> {
                 yield pojo;
                 for (let child of pojo.children || []) {
