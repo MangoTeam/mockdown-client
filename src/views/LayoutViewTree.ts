@@ -10,13 +10,13 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
         super(value, 0);
     }
 
-    static fromJSON(json: ILayoutViewTree.JSON) {
+    static fromPOJO(pojo: ILayoutViewTree.POJO) {
 
-        const value = new LayoutView(json.name, [...json.rect] as ILayoutView.Rect) as ILayoutView;
+        const value = new LayoutView(pojo.name, [...pojo.rect] as ILayoutView.Rect) as ILayoutView;
         const root = new this(value);
 
-        for (const childJSON of (json.children || [])) {
-            root.add(this.fromJSON(childJSON));
+        for (const childPOJO of (pojo.children || [])) {
+            root.add(this.fromPOJO(childPOJO));
         }
 
         return root;
@@ -59,11 +59,11 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
     /// Get the canonical JSON representation, which does not
     /// contain convenience accessors for left, right,
     /// top, bottom, width, height, center_x, center_y, etc.
-    public get json(): ILayoutViewTree.JSON {
+    public get pojo(): ILayoutViewTree.POJO {
         return {
             name: this.view.name,
             rect: [...this.view.rect] as ILayoutView.Rect,
-            children: Array.from(this.children, (child) => child.json)
+            children: Array.from(this.children, (child) => child.pojo)
         }
     }
 }

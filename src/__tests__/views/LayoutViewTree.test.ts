@@ -2,7 +2,7 @@ import { ILayoutViewTree, LayoutViewTree } from '../..';
 
 describe(LayoutViewTree, () => {
     test(`can be constructed from JSON.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -11,7 +11,7 @@ describe(LayoutViewTree, () => {
 
 
     test(`can be converted into JSON (and back)`, () => {
-        const json: ILayoutViewTree.JSON = {
+        const pojo: ILayoutViewTree.POJO = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -20,13 +20,13 @@ describe(LayoutViewTree, () => {
             ]
         };
 
-        const view = LayoutViewTree.fromJSON(json);
+        const view = LayoutViewTree.fromPOJO(pojo);
 
-        expect(view.json).toEqual(json);
+        expect(view.json).toEqual(pojo);
     });
 
     test(`initializes depth for subtrees on creation.`, () => {
-        const json: ILayoutViewTree.JSON = {
+        const pojo: ILayoutViewTree.POJO = {
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -44,7 +44,7 @@ describe(LayoutViewTree, () => {
             ]
         };
 
-        const view = LayoutViewTree.fromJSON(json);
+        const view = LayoutViewTree.fromPOJO(pojo);
 
         expect(view.depth).toEqual(0);
         expect(view.find("a")!.depth).toEqual(1);
@@ -52,7 +52,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`corrects depth for subtrees on insertion.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -64,7 +64,7 @@ describe(LayoutViewTree, () => {
             ]
         });
 
-        const child = LayoutViewTree.fromJSON({
+        const child = LayoutViewTree.fromPOJO({
             name: "b",
             rect: [50, 50, 100, 100],
             children: []
@@ -83,7 +83,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`implements attribute getters.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [10, 10, 100, 100],
             children: []
@@ -98,7 +98,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`implements attribute setters.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [0, 0, 100, 100],
             children: []
@@ -118,7 +118,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`allows lookup of children by name.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [
@@ -131,7 +131,7 @@ describe(LayoutViewTree, () => {
     });
 
     test(`implements Iterable.`, () => {
-        const view = LayoutViewTree.fromJSON({
+        const view = LayoutViewTree.fromPOJO({
             name: "root",
             rect: [0, 0, 100, 100],
             children: [

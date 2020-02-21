@@ -3,13 +3,26 @@ import { ILayoutView } from './ILayoutView';
 
 export interface ILayoutViewTree extends IIndexedTree<string, ILayoutView>, ILayoutView {
     readonly view: ILayoutView
-    readonly json: ILayoutViewTree.JSON;
+    readonly pojo: ILayoutViewTree.POJO;
 }
 
 export namespace ILayoutViewTree {
-    export interface JSON {
+    export interface POJO {
         name: string;
         rect: ILayoutView.Rect;
-        children?: Array<ILayoutViewTree.JSON>;
+        children?: Array<ILayoutViewTree.POJO>;
+    }
+
+    export namespace POJO {
+        export function preorderIterator(root: POJO): Iterator<POJO> {
+            function* iterator(pojo: POJO): Generator<POJO> {
+                yield pojo;
+                for (let child of pojo.children || []) {
+                    yield* iterator(child);
+                }
+            }
+
+            return iterator(root);
+        }
     }
 }

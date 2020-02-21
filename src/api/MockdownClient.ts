@@ -15,12 +15,12 @@ export class MockdownClient {
         this._synthesizeEndpoint = `http://${host}:${port}/api/synthesize`;
     }
 
-    async fetch(examples: Array<ILayoutViewTree.JSON>, dims: [number, number], filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE): Promise<ConstraintParser.IConstraintJSON[]> {
+    async fetch(examples: Array<ILayoutViewTree.POJO>, dims: [number, number], filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE): Promise<ConstraintParser.IConstraintJSON[]> {
         // console.log(filter);
         const bounds = {
             'min_w': dims[0],
             'max_w': dims[1]
-        }
+        };
         // console.log(bounds);
         const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'bounds': bounds });
 
