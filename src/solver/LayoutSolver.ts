@@ -61,11 +61,11 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
                 Strength.required
             );
             let centerYAxiom = new Constraint(
-                centery.multiply(2.0), Operator.Eq, top.plus(height),
+                centery, Operator.Eq, top.plus(height.divide(2.0)),
                 Strength.required
             );
             let centerXAxiom = new Constraint(
-                centerx.multiply(2.0), Operator.Eq, left.plus(width),
+                centerx, Operator.Eq, left.plus(width.divide(2.0)),
                 Strength.required
             );
 
