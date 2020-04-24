@@ -20,8 +20,8 @@ export class ConstraintParser {
     static isConstraintJSON(obj: any): obj is ConstraintParser.IConstraintJSON {
         return (
             ('kind' in obj ? (typeof(obj.kind) === 'string') : true)
-            && ('a' in obj ? (typeof(obj.a) === 'number') : true)
-            && ('b' in obj ? (typeof(obj.b) === 'number') : true)
+            && ('a' in obj ? (typeof(obj.a) === 'string') : true)
+            && ('b' in obj ? (typeof(obj.b) === 'string') : true)
             && ('x' in obj ? (typeof(obj.x) === 'string') : true)
             && ('y' in obj && (typeof(obj.y) === 'string'))
             && 'op' in obj && ConstraintParser.VALID_OPS.has(obj.op)
@@ -52,17 +52,21 @@ export class ConstraintParser {
 
         const y = variableMap.get(json.y);
         if (y === undefined) {
-            throw new Error(`Parsing failed: variable ${json.y} does not exist.`);
+            throw new Error(`Parsing failed: y variable ${json.y} does not exist.`);
         }
 
         const x = json.x ? variableMap.get(json.x) : undefined;
-        if (x === undefined && kind !== "absolute_size") {
+        if (x === undefined && kind !== "size_constant") {
             console.error('variables:');
             console.error([...variableMap.keys()]);
-            throw new Error(`Parsing failed: variable ${json.x} does not exist.`);
+            throw new Error(`Parsing failed: x variable ${json.x} does not exist.`);
         }
 
         const { b, op, a } = json;
+        const [fA, fB] = [Number.parseFloat(a || "1"), Number.parseFloat(b || "0")];
+
+
+        // const [num_a, num_b] = [Number.parseFloat(a), Number.parseFloat(b)]
 
         const strength = ConstraintParser.pickStrength(
             json.strength,
@@ -72,9 +76,14 @@ export class ConstraintParser {
 
         let rhs;
         if (x) {
-            rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+            rhs = new kiwi.Expression(x).multiply(fA).plus(fB);
         } else {
-            rhs = new kiwi.Expression(b);
+            if (b) {
+                rhs = new kiwi.Expression(fB);
+            } else {
+                throw new Error("Expected 'b' when x is undefined");
+            }
+            
         }
 
         let kiwiOp: kiwi.Operator | undefined = undefined;
@@ -104,13 +113,26 @@ export class ConstraintParser {
 export namespace ConstraintParser {
     export interface IConstraintJSON {
         kind?: string,
-        a?: number;
-        b?: number;
+        a?: string;
+        b?: string;
         x?: string;
         y: string;
         op: '=' | '==' | '≥' | '>=' | '≤' | '<=';
         strength?: number | [number, number, number];
     }
+
+    // return {
+    //     'y': str(self.y_id),
+    //     'op': {
+    //         operator.eq: '=',
+    //         operator.le: '≤',
+    //         operator.ge: '≥'
+    //     }[self.op],
+    //     'a': str(self.a),
+    //     'b': str(self.b),
+    //     'priority': str(self.priority),
+    //     'kind': self.kind.value
+    // }
 
     export interface IParseOptions {
         strength?: number | [number, number, number];

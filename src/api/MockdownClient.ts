@@ -43,7 +43,7 @@ export namespace MockdownClient {
     export enum SynthType {
         NONE = "none",
         BASE = "baseline",
-        FANCY = "fancy",
-        HIER = "hierarchical"
+        HIER = "hierarchical",
+        CEGIS = "cegis"
     }
 }
