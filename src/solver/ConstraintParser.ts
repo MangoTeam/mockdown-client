@@ -8,6 +8,14 @@ import IParseOptions = ConstraintParser.IParseOptions;
 const constraintRegex = 
     /^([\w.]+)\s*(=|≥|≤|>=|<=)\s*(\d+)?\s*\*?\s*([\w.]+)\s+([+-])\s+(\d+)$/;
 
+export function parseFraction(str: string) : number {
+    const [pref, suf] = str.split('/');
+    if (!pref) {
+        throw new Error(`can't parse ${str} as a fraction`);
+    }
+    return parseFloat(pref) / parseFloat(suf);
+}
+
 export class ConstraintParser {
     private readonly _variableMap: VariableMap;
 
@@ -43,6 +51,7 @@ export class ConstraintParser {
 
     parse(json: any, options: IParseOptions = {}) {
         if (!ConstraintParser.isConstraintJSON(json)) {
+            console.log(json)
             throw new Error("Got malformed constraint JSON.");
         }
 
@@ -55,15 +64,16 @@ export class ConstraintParser {
             throw new Error(`Parsing failed: y variable ${json.y} does not exist.`);
         }
 
-        const x = json.x ? variableMap.get(json.x) : undefined;
-        if (x === undefined && kind !== "size_constant") {
-            console.error('variables:');
-            console.error([...variableMap.keys()]);
+        const x = json.x != "None" ? variableMap.get(json.x!) : undefined;
+        if (x === undefined && !(kind == "size_constant" || kind == "absolute_size")) {
+            console.log(kind)
+            // console.error('variables:');
+            // console.error([...variableMap.keys()]);
             throw new Error(`Parsing failed: x variable ${json.x} does not exist.`);
         }
 
         const { b, op, a } = json;
-        const [fA, fB] = [Number.parseFloat(a || "1"), Number.parseFloat(b || "0")];
+        const [fA, fB] = [parseFraction(a || "1"), parseFraction(b || "0")];
 
 
         // const [num_a, num_b] = [Number.parseFloat(a), Number.parseFloat(b)]
