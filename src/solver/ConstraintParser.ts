@@ -69,12 +69,16 @@ export class ConstraintParser {
             options.strength
         ) || kiwi.Strength.required;
 
+        // console.log('parsing with fixed')
+
+        // let clamp = (x: number) => Number(x.toFixed(3))
+        let clamp = (x: number) => x
 
         let rhs;
         if (x) {
-            rhs = new kiwi.Expression(x).multiply(a || 1).plus(b || 0);
+            rhs = new kiwi.Expression(x).multiply(clamp(a || 1)).plus(clamp(b || 0));
         } else {
-            rhs = new kiwi.Expression(b);
+            rhs = new kiwi.Expression(clamp(b!));
         }
 
         let kiwiOp: kiwi.Operator | undefined = undefined;

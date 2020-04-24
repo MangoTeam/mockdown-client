@@ -3,6 +3,9 @@ import { Solver } from 'flightlessbird.js';
 
 import { Attribute, ILayoutViewTree } from '../views';
 import { ILayoutSolver } from "./ILayoutSolver";
+import { ConstraintParser } from "./ConstraintParser";
+
+import { filter, any, union } from "../util";
 
 export class LayoutSolver extends Solver implements ILayoutSolver {
     /// The root of the view hierarchy being solved over.
@@ -10,6 +13,9 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
     /// Index for all variables by name (e.g. 'foo.left').
     readonly variableMap: Map<string, Variable>;
+
+    readonly sourceConstraints : Set<Constraint>;
+    
 
     /// Index for all views by name (e.g. 'foo').
     private _viewMap: Map<string, ILayoutViewTree>;
@@ -22,9 +28,58 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         return names.map((name) => this.getVariable(name));
     }
 
+    public getConstraint(name: string) : Set<Constraint> {
+
+        const out = new Set<Constraint>();
+        
+        for (let constr of this.sourceConstraints) {
+            // for (let pr of constr.expression().terms()) {
+            for (let pr of constr.expression().terms().array) {
+                const term = pr.first;
+                if (term.name() == name) out.add(constr)
+            }
+        }
+
+        return out;
+    }
+
+    public getConnectedConstraints(name: string) : Set<Constraint> {
+
+        const out = new Set<Constraint>();
+        let names = new Set<string>();
+        names.add(name);
+        let reachedFixed = false;
+    
+        while (!reachedFixed) {
+            reachedFixed = true;
+            const inspect = filter(this.sourceConstraints, (t) => !out.has(t));
+            for (let constr of inspect) {
+
+                const terms = new Set<string>(constr.expression().terms().array.map(v => v.first.name()));
+
+                if (any(terms, t => names.has(t))) {
+                    names = union(names, terms);
+                    out.add(constr);
+                    reachedFixed = true;
+                }
+            }
+        }
+
+        // console.log([...names]);
+        
+        return out;
+    }
+
+
     public getView(name: string): ILayoutViewTree | undefined {
         return this._viewMap.get(name);
     }
+
+    public addConstraint(constraint: Constraint) : void {
+        super.addConstraint(constraint);
+        this.sourceConstraints.add(constraint);
+    }
+    
 
     constructor(root: ILayoutViewTree) {
         super();
@@ -49,42 +104,83 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             })
         );
 
+        this.sourceConstraints = new Set();
+
         // Add the axiomatic constraints, e.g. width = right - left, width >= 0.
+        let fuzzyAxioms = false;
         for (const view of viewMap.values()) {
             let [left, top, right, bottom, width, height, centerx, centery] = attrs.map((attr) => {
                 return variableMap.get(`${view.name}.${attr}`)!;
             });
 
             let widthAxiomRHS = right.minus(left);
-            let widthAxiom = new Constraint(
-                width, Operator.Eq, widthAxiomRHS,
-                Strength.required
-            );
-            let centerYAxiom = new Constraint(
-                centery, Operator.Eq, top.plus(height.divide(2.0)),
-                Strength.required
-            )
-            let centerXAxiom = new Constraint(
-                centerx, Operator.Eq, left.plus(width.divide(2.0)),
-                Strength.required
-            )
+            let heightAxiomRHS = bottom.minus(top);
+            let cyRHS = top.multiply(2).plus(height);
+            let cxRHS = left.multiply(2).plus(width);
+
+            if (fuzzyAxioms) {
+
+                const fuzz = 0.01;
+
+                this.addConstraint(new Constraint(
+                    centery.multiply(2), Operator.Le, cyRHS.plus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    centery.multiply(2), Operator.Ge, cyRHS.minus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    centerx.multiply(2), Operator.Le, cxRHS.plus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    centerx.multiply(2), Operator.Ge, cxRHS.minus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    height, Operator.Le, heightAxiomRHS.plus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    height, Operator.Ge, heightAxiomRHS.plus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    width, Operator.Le, widthAxiomRHS.plus(fuzz),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    width, Operator.Ge, widthAxiomRHS.minus(fuzz),
+                    Strength.required
+                ));
+
+            } else {
+                this.addConstraint(new Constraint(
+                    centery.multiply(2), Operator.Eq, top.multiply(2).plus(height),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    centerx.multiply(2), Operator.Eq, left.multiply(2).plus(width),
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    height, Operator.Eq, heightAxiomRHS,
+                    Strength.required
+                ));
+                this.addConstraint(new Constraint(
+                    width, Operator.Eq, widthAxiomRHS,
+                    Strength.required
+                ));
+            }
 
             let positiveWidthAxiom = new Constraint(width, Operator.Ge, new Expression(0));
-
-            let heightAxiomRHS = bottom.minus(top);
-            let heightAxiom = new Constraint(
-                height, Operator.Eq, heightAxiomRHS,
-                Strength.required
-            );
-
             let positiveHeightAxiom = new Constraint(height, Operator.Ge, new Expression(0));
 
             this.addConstraint(positiveWidthAxiom);
-            this.addConstraint(widthAxiom);
             this.addConstraint(positiveHeightAxiom);
-            this.addConstraint(heightAxiom);
-            this.addConstraint(centerXAxiom);
-            this.addConstraint(centerYAxiom);
+
+
         }
     }
 
