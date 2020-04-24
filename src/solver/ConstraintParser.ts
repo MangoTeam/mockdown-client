@@ -9,10 +9,11 @@ const constraintRegex =
     /^([\w.]+)\s*(=|≥|≤|>=|<=)\s*(\d+)?\s*\*?\s*([\w.]+)\s+([+-])\s+(\d+)$/;
 
 export function parseFraction(str: string) : number {
-    const [pref, suf] = str.split('/');
+    let [pref, suf] = str.split('/');
     if (!pref) {
         throw new Error(`can't parse ${str} as a fraction`);
     }
+    suf = suf || "1";
     return parseFloat(pref) / parseFloat(suf);
 }
 
