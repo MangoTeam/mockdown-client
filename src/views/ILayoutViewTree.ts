@@ -10,10 +10,25 @@ export namespace ILayoutViewTree {
     export interface POJO {
         name: string;
         rect: ILayoutView.Rect;
+        children: Array<ILayoutViewTree.POJO>;
+    }
+
+    export interface RelaxedPOJO {
+        name: string;
+        rect: ILayoutView.Rect;
         children?: Array<ILayoutViewTree.POJO>;
     }
 
     export namespace POJO {
+        export function fromRelaxed(relaxed: RelaxedPOJO): POJO {
+            const {name, rect, children} = relaxed;
+            return {
+                name,
+                rect,
+                children: children || []
+            };
+        }
+
         export function preorderIterator(root: POJO): Iterator<POJO> & Iterable<POJO> {
             function* iterator(pojo: POJO): Generator<POJO> {
                 yield pojo;
