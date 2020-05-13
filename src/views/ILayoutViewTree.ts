@@ -16,7 +16,7 @@ export namespace ILayoutViewTree {
     export interface RelaxedPOJO {
         name: string;
         rect: ILayoutView.Rect;
-        children?: Array<ILayoutViewTree.POJO>;
+        children?: Array<ILayoutViewTree.RelaxedPOJO>;
     }
 
     export namespace POJO {
@@ -25,7 +25,7 @@ export namespace ILayoutViewTree {
             return {
                 name,
                 rect,
-                children: children || []
+                children: children ? children.map(fromRelaxed) : []
             };
         }
 
