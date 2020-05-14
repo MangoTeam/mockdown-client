@@ -10,7 +10,8 @@ export class LayoutViewTree extends IndexedTree<string, ILayoutView> implements 
         super(value, 0);
     }
 
-    static fromPOJO(pojo: ILayoutViewTree.POJO) {
+    static fromPOJO(relaxedPOJO: ILayoutViewTree.RelaxedPOJO) {
+        const pojo = ILayoutViewTree.POJO.fromRelaxed(relaxedPOJO);
 
         const value = new LayoutView(pojo.name, [...pojo.rect] as ILayoutView.Rect) as ILayoutView;
         const root = new this(value);
