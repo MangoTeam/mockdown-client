@@ -8,13 +8,14 @@ import IParseOptions = ConstraintParser.IParseOptions;
 const constraintRegex = 
     /^([\w.]+)\s*(=|≥|≤|>=|<=)\s*(\d+)?\s*\*?\s*([\w.]+)\s+([+-])\s+(\d+)$/;
 
-export function parseFraction(str: string) : number {
+export function parseFraction(str: string) : [number, number] {
+    // return eval(str);
     let [pref, suf] = str.split('/');
     if (!pref) {
         throw new Error(`can't parse ${str} as a fraction`);
     }
     suf = suf || "1";
-    return parseFloat(pref) / parseFloat(suf);
+    return [parseInt(pref), parseInt(suf)];
 }
 
 export class ConstraintParser {
@@ -74,23 +75,31 @@ export class ConstraintParser {
         }
 
         const { b, op, a } = json;
-        const [fA, fB] = [parseFraction(a || "1"), parseFraction(b || "0")];
+        const [[anum, adenom], [bnum, bdenom]] = [parseFraction(a || "1"), parseFraction(b || "0")];
 
-
-        // const [num_a, num_b] = [Number.parseFloat(a), Number.parseFloat(b)]
+        // constraint looks like:
+        // y = anum/adenom * x + bnum/bdenom;
+        
 
         const strength = ConstraintParser.pickStrength(
             json.strength,
             options.strength
         ) || kiwi.Strength.required;
 
-
         let rhs;
+        let lhs = new kiwi.Expression(y);
         if (x) {
-            rhs = new kiwi.Expression(x).multiply(fA).plus(fB);
+            // ademon * bdenom * y = anum * bdenom * x + bnum * adenom
+            rhs = new kiwi.Expression(x).multiply(bdenom).multiply(anum);
+            rhs = rhs.plus(bnum * adenom);
+            lhs = lhs.multiply(adenom * bdenom);
+            
+            
         } else {
             if (b) {
-                rhs = new kiwi.Expression(fB);
+                // bdenom * y = bnum
+                rhs = new kiwi.Expression(bnum);
+                lhs = lhs.multiply(bdenom);
             } else {
                 throw new Error("Expected 'b' when x is undefined");
             }
@@ -117,7 +126,11 @@ export class ConstraintParser {
             throw new Error(`Parsing failed: ${op} is not a valid operator.`);
         }
 
-        return new kiwi.Constraint(y, kiwiOp, rhs, strength);
+        // console.log(`parsing: ${JSON.stringify(json)}`);
+        const out = new kiwi.Constraint(lhs, kiwiOp, rhs, strength);
+        // console.log(`produced: ${out.toString()}`);
+
+        return out;
     }
 }
 
