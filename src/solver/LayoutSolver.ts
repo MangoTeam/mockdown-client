@@ -36,7 +36,10 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             // for (let pr of constr.expression().terms()) {
             for (let pr of constr.expression().terms().array) {
                 const term = pr.first;
-                if (term.name() == name) out.add(constr)
+                if (term.name() == name) {
+                    out.add(constr);
+                    break;
+                }
             }
         }
 
@@ -95,6 +98,8 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             })
         );
 
+        // console.log(views.map(x => x.name));
+
         // Create all of the necessary variables.
         const variableMap = this.variableMap = new Map(
             views.flatMap((view: ILayoutViewTree) => {
@@ -107,8 +112,21 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
 
         this.sourceConstraints = new Set();
 
+        // add containment constraints: each child is contained within its parent
+        // for (const view of root) {
+        //     const pos_attrs = [Attribute.Left, Attribute.Right, Attribute.Bottom, Attribute.Top]
+        //     const [pl, pr, pb, pt] = pos_attrs.map(attr => variableMap.get(`${view.name}.${attr}`)!);
+        //     for (const child of view.children) {
+        //         const [cl, cr, cb, ct] = pos_attrs.map(attr => variableMap.get(`${child.name}.${attr}`)!);
+        //         this.addConstraint(new Constraint(pl, Operator.Le, cl, Strength.required));
+        //         this.addConstraint(new Constraint(pr, Operator.Ge, cr, Strength.required));
+        //         this.addConstraint(new Constraint(pt, Operator.Le, ct, Strength.required));
+        //         this.addConstraint(new Constraint(pb, Operator.Ge, cb, Strength.required));
+        //     }
+        // }
+
         // Add the axiomatic constraints, e.g. width = right - left, width >= 0.
-        for (const view of viewMap.values()) {
+        for (const view of root) {
             // console.log(`adding axioms for ${view.name}`)
             const axStrength = Strength.required;
             let [left, top, right, bottom, width, height, centerx, centery] = attrs.map((attr) => {
@@ -145,6 +163,8 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
             for (const anchor of [left, top, right, bottom, width, height, centerx, centery]) {
                 let positiveAnchor = new Constraint(anchor, Operator.Ge, new Expression(0), axStrength);
                 this.addConstraint(positiveAnchor);
+                let boundedAnchor = new Constraint(anchor, Operator.Le, new Expression(10000), Strength.weak);
+                this.addConstraint(boundedAnchor);
             }
 
         }

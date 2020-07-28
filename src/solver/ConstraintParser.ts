@@ -44,10 +44,17 @@ export class ConstraintParser {
         return kiwi.Strength.create(...param);
     }
 
+    // given a list of (possibly null) strengths, take the first that is well-defined wrt normalizeStrength
+
     static pickStrength(...strengths: (number | [number, number, number] | undefined)[]) : (number | undefined) {
         function reduction(z: number | undefined, strength: number | [number, number, number] | undefined) {
             return z || ConstraintParser.normalizeStrength(strength);
         }
+        // console.log('reduction:')
+        // console.log(strengths);
+        // console.log(typeof strengths[0]);
+        // console.log(strengths.reduce(reduction, undefined));
+        // console.log(ConstraintParser.normalizeStrength(strengths[0]));
         return strengths.reduce(reduction, undefined);
     }
 
@@ -63,14 +70,16 @@ export class ConstraintParser {
 
         const y = variableMap.get(json.y);
         if (y === undefined) {
+            // console.error('variables:');
+            // console.error([...variableMap.keys()]);
             throw new Error(`Parsing failed: y variable ${json.y} does not exist.`);
         }
 
         const x = json.x != "None" ? variableMap.get(json.x!) : undefined;
         if (x === undefined && !(kind == "size_constant" || kind == "absolute_size")) {
             console.log(kind)
-            // console.error('variables:');
-            // console.error([...variableMap.keys()]);
+            console.error('variables:');
+            console.error([...variableMap.keys()]);
             throw new Error(`Parsing failed: x variable ${json.x} does not exist.`);
         }
 
