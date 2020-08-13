@@ -88,7 +88,6 @@ export class LayoutSolver extends Solver implements ILayoutSolver {
         super();
 
         const views = Array.from(root);
-        // console.log(`length: ${views.length}`);
         const attrs = Object.values(Attribute);
 
         this.root = root;

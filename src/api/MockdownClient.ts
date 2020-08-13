@@ -22,7 +22,7 @@ export class MockdownClient {
 
     
 
-    async fetch(examples: Array<ILayoutViewTree.POJO>, opts: fetchOpts, unambig: boolean, filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE): Promise<ConstraintParser.IConstraintJSON[]> {
+    async fetch(examples: Array<ILayoutViewTree.POJO>, opts: fetchOpts, unambig: boolean, filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE, timeout: number): Promise<{'constraints': ConstraintParser.IConstraintJSON[], 'axioms': ConstraintParser.IConstraintJSON[]}> {
         // console.log(filter);
         const bounds = {
             'min_w': opts.width.lower,
@@ -31,7 +31,7 @@ export class MockdownClient {
             'max_h': opts.height.upper,
         };
         // console.log(bounds);
-        const body = JSON.stringify({ 'examples': examples, 'pruning': filter, 'bounds': bounds, 'unambig': unambig});
+        const body = JSON.stringify({ 'examples': examples, options: {'pruning_method': filter, 'bounds': bounds, 'unambig': unambig}, timeout: timeout});
 
         const response = await fetch(this._synthesizeEndpoint, {
             method: 'POST',
@@ -39,6 +39,11 @@ export class MockdownClient {
             headers: { 'Content-Type': 'application/json' },
             body: body
         });
+
+        if (response.status >= 400) {
+            // console.log('got an error');
+            return Promise.reject('server error');
+        }
 
         return response.json();
     }
@@ -52,8 +57,7 @@ export namespace MockdownClient {
     export enum SynthType {
         NONE = "none",
         BASE = "baseline",
-        HIER = "hierarchical",
-        CEGIS = "cegis"
+        HIER = "hierarchical"
     }
     export interface IBound {
         lower: number,

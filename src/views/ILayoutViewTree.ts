@@ -25,7 +25,7 @@ export namespace ILayoutViewTree {
             return {
                 name,
                 rect,
-                children: children ? children.map(fromRelaxed) : []
+                children: (children || []).map(fromRelaxed)
             };
         }
 
