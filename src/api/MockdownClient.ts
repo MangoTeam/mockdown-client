@@ -2,9 +2,10 @@ import { ILayoutViewTree } from '../views';
 
 import { ConstraintParser } from '../solver';
 
-type fetchOpts = {
+export type FetchOpts = {
     height: MockdownClient.IBound,
-    width: MockdownClient.IBound
+    width: MockdownClient.IBound,
+    learningMethod: "simple" | "noisetolerant"
 }
 
 export class MockdownClient {
@@ -21,8 +22,8 @@ export class MockdownClient {
     }
 
     
-
-    async fetch(examples: Array<ILayoutViewTree.POJO>, opts: fetchOpts, unambig: boolean, filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE, timeout: number): Promise<{'constraints': ConstraintParser.IConstraintJSON[], 'axioms': ConstraintParser.IConstraintJSON[]}> {
+    // TODO: add 'learningMethod', 'unambig', and 'pruningMethod' to FetchOpts
+    async fetch(examples: Array<ILayoutViewTree.POJO>, opts: FetchOpts, unambig: boolean, filter: MockdownClient.SynthType = MockdownClient.SynthType.NONE, timeout: number): Promise<{'constraints': ConstraintParser.IConstraintJSON[], 'axioms': ConstraintParser.IConstraintJSON[]}> {
         // console.log(filter);
         const bounds = {
             'min_w': opts.width.lower,
@@ -31,7 +32,13 @@ export class MockdownClient {
             'max_h': opts.height.upper,
         };
         // console.log(bounds);
-        const body = JSON.stringify({ 'examples': examples, options: {'pruning_method': filter, 'bounds': bounds, 'unambig': unambig}, timeout: timeout});
+        const body = JSON.stringify({ 'examples': examples, 
+            options: {
+                'pruning_method': filter, 
+                'bounds': bounds, 
+                'unambig': unambig,
+                'learning_method': opts.learningMethod
+        }, timeout: timeout});
 
         const response = await fetch(this._synthesizeEndpoint, {
             method: 'POST',
