@@ -5,7 +5,7 @@ import { ConstraintParser } from '../solver';
 export type FetchOpts = {
     height: MockdownClient.IBound,
     width: MockdownClient.IBound,
-    learningMethod: "simple" | "noisetolerant"
+    learningMethod: "simple" | "heuristic" | "noisetolerant"
 }
 
 export class MockdownClient {
